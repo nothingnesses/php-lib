@@ -34,7 +34,6 @@
           ...
         }: {
           languages = {
-            javascript = {enable = true;};
             php = {
               enable = true;
               extensions = ["xdebug"];

@@ -1,7 +1,8 @@
 {
-    "name": "nothingnesses/php-lib",
+    "name": "nothingnesses/lib",
     "description": "Library for PHP projects",
     "type": "library",
+    "minimum-stability": "dev",
     "require-dev": {
         "composer": "^2.5",
         "rector/rector": "^0.17.0",
@@ -11,7 +12,7 @@
     "license": "Blue Oak Model License 1.0.0",
     "autoload": {
         "psr-4": {
-            "Nothingnesses\\PhpLib\\": "src/"
+            "Nothingnesses\\Lib\\": "dist/"
         }
     },
     "authors": [
@@ -20,5 +21,11 @@
             "email": "18732253+nothingnesses@users.noreply.github.com"
         }
     ],
-    "require": {}
+    "scripts": {
+        "process": [
+            "rm -fr dist",
+            "cp -a src dist",
+            "vendor/bin/rector process -- dist"
+        ]
+    }
 }
