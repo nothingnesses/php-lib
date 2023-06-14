@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace Nothingnesses\Lib\Traits;
 
-use Nothingnesses\Lib\Interfaces as I;
 use Nothingnesses\Lib\Classes as C;
 
 trait Iterator {
@@ -80,68 +79,5 @@ trait Iterator {
 			array_push($array, $item);
 		});
 		return $array;
-	}
-}
-
-trait FilterIterator {
-	/**
-	 * @param callable $predicate
-	 */
-	public function filter($predicate): I\FilterIterator {
-		return C\FilterIterator::new($predicate)($this);
-	}
-}
-
-trait MapIterator {
-	/**
-	 * @param callable $mapper
-	 */
-	public function map($mapper): I\MapIterator {
-		return C\MapIterator::new($mapper)($this);
-	}
-}
-
-trait DoubleEndedIterator {
-	abstract public function next_back(): C\Maybe;
-
-	public function reverse(): C\ReversedIterator {
-		return C\ReversedIterator::new($this);
-	}
-
-	/**
-	 * @param callable $predicate
-	 */
-	public function reverse_find($predicate): C\Maybe {
-		$current = $this->next_back();
-		while ($current->is_some()) {
-			$result = $current->bind(function ($item) use ($predicate) {
-				return $predicate($item)
- 				? C\Maybe::some($item)
- 				: C\Maybe::none();
-			});
-			if ($result->is_some()) {
-				return $result;
-			}
-			$current = $this->next_back();
-		}
-		return C\Maybe::none();
-	}
-}
-
-trait DoubleEndedMapIterator {
-	/**
-	 * @param callable $mapper
-	 */
-	public function map($mapper): I\MapIterator {
-		return C\DoubleEndedMapIterator::new($mapper)($this);
-	}
-}
-
-trait DoubleEndedFilterIterator {
-	/**
-	 * @param callable $predicate
-	 */
-	public function filter($predicate): I\FilterIterator {
-		return C\DoubleEndedFilterIterator::new($predicate)($this);
 	}
 }

@@ -7,22 +7,6 @@ declare(strict_types=1);
 namespace Nothingnesses\Lib\Interfaces;
 
 /**
- * Functor interface.
- *
- * @template A
- * @template B
- */
-interface Functor {
-	/**
-	 * Maps a function over the wrapped value.
-	 *
-	 * @param callable(A): B $fn - The function to be applied.
-	 * @return Functor<B> - A new functor with the function applied.
-	 */
-	public function map($fn): self;
-}
-
-/**
  * Monad interface.
  *
  * @template A
@@ -35,5 +19,5 @@ interface Monad {
 	 * @param callable(A): Functor<B> $fn - The monadic function to be applied.
 	 * @return Functor<B> - A new monad with the function applied.
 	 */
-	public function bind($fn): self;
+	public function bind(callable $fn): self;
 }

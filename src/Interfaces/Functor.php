@@ -21,19 +21,3 @@ interface Functor {
 	 */
 	public function map(callable $fn): self;
 }
-
-/**
- * Monad interface.
- *
- * @template A
- * @template B
- */
-interface Monad {
-	/**
-	 * Chains a monadic function over the wrapped value.
-	 *
-	 * @param callable(A): Functor<B> $fn - The monadic function to be applied.
-	 * @return Functor<B> - A new monad with the function applied.
-	 */
-	public function bind(callable $fn): self;
-}

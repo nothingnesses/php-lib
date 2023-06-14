@@ -19,7 +19,7 @@ interface Iterator extends Functor {
 	 * @param callable(A): bool $predicate The function applied to the item being iterated over to test if it matches the condition.
 	 * @return bool `true` if any item matches the condition, `false` otherwise.
 	 */
-	public function any($predicate): bool;
+	public function any(callable $predicate): bool;
 
 	/**
 	 * Filters the items in the iterator based on a given condition.
@@ -27,7 +27,7 @@ interface Iterator extends Functor {
 	 * @param callable(A): bool $predicate The function applied to the items being iterated over to filter those that match the condition.
 	 * @return FilterIterator<A> An iterator over the items matching the condition.
 	 */
-	public function filter($predicate): FilterIterator;
+	public function filter(callable $predicate): FilterIterator;
 
 	/**
 	 * Finds the first item in the iterator that matches a given condition.
@@ -35,7 +35,7 @@ interface Iterator extends Functor {
 	 * @param callable(A): bool $predicate The function applied to the item being iterated over to test if it matches the condition.
 	 * @return C\Maybe<A> The `some` variant containing the first item that matches the condition, if it exists, or the `none` variant.
 	 */
-	public function find($predicate): C\Maybe;
+	public function find(callable $predicate): C\Maybe;
 
 
 	/**
@@ -45,14 +45,13 @@ interface Iterator extends Functor {
 	 * @param callable(B $carry): callable(A $item): B $fn The function to apply to each item being iterated over.
 	 * @return \Closure(B $initial): B A closure that accepts the initial value and returns the reduced value.
 	 */
-	public function foldl($fn): \Closure;
+	public function foldl(callable $fn): \Closure;
 	/**
 	 * Applies a function to each item in the iterator.
 	 *
 	 * @param callable(A): void $fn The function to apply to each item being iterated over.
-	 * @return void
 	 */
-	public function for_each($fn);
+	public function for_each(callable $fn): void;
 
 	/**
 	 * Applies a function to each item in the iterator and returns the output.
@@ -60,7 +59,7 @@ interface Iterator extends Functor {
 	 * @param callable(A): A $fn The function to apply to each item being iterated over.
 	 * @return MapIterator<A> An iterator over the results of applying the function over the items.
 	 */
-	public function map($fn): \Nothingnesses\Lib\Interfaces\Functor;
+	public function map(callable $fn): MapIterator;
 
 	/**
 	 * Retrieves the next item from the iterator.
@@ -75,47 +74,4 @@ interface Iterator extends Functor {
 	 * @return array<A> An array containing the items collected from the iterator.
 	 */
 	public function to_array(): array;
-}
-
-/**
- * @template A
- * All filter iterators are supposed to implement this.
- */
-interface FilterIterator extends Iterator {
-}
-
-/**
- * @template A
- * All map iterators are supposed to implement this.
- */
-interface MapIterator extends Iterator {
-}
-
-/**
- * @template A
- *
- * An iterator able to yield elements from both ends.
- */
-interface DoubleEndedIterator extends Iterator {
-	/**
-	 * Returns the next item from the back.
-	 *
-	 * @return C\Maybe<A> The next item from the back.
-	 */
-	public function next_back(): C\Maybe;
-
-	/**
-	 * Returns an iterator that iterates items in reverse, up to the last item to be iterated before the reversal.
-	 *
-	 * @return C\ReversedIterator<A> An iterator that iterates items in reverse.
-	 */
-	public function reverse(): C\ReversedIterator;
-
-	/**
-	 * Returns the first item from the back that matches a condition.
-	 *
-	 * @param callable(A): bool $predicate Function applied to the item being iterated over to test if it matches a condition.
-	 * @return C\Maybe<A> `Maybe.some` containing the first item from the back that matches the condition, if it exists; otherwise, `Maybe.none`.
-	 */
-	public function reverse_find($predicate): C\Maybe;
 }
