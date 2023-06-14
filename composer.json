@@ -1,6 +1,6 @@
 {
     "name": "nothingnesses/lib",
-    "description": "Library for PHP projects",
+    "description": "Library for PHP projects.",
     "type": "library",
     "minimum-stability": "dev",
     "require-dev": {

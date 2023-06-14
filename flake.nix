@@ -1,7 +1,3 @@
-# Run development environment with:
-# nix develop --impure
-# Then run server with:
-# devenv up
 {
   inputs = {
     devenv = {
