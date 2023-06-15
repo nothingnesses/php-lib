@@ -34,10 +34,15 @@
               enable = true;
               extensions = ["xdebug"];
               ini = ''
-                upload_max_filesize = 128M
-                memory_limit = 1G
-                xdebug.mode = debug
-                xdebug.start_with_request = yes
+                assert.exception=1
+                error_reporting=-1
+                log_errors_max_len=0
+                memory_limit=-1
+                upload_max_filesize=128M
+                xdebug.mode=coverage,debug
+                xdebug.show_exception_trace=0
+                xdebug.start_with_request=yes
+                zend.assertions=1
               '';
               package = phps.packages.${system}.php;
               version = php-version;

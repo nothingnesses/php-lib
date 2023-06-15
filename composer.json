@@ -6,7 +6,7 @@
     "require-dev": {
         "composer": "^2.5",
         "rector/rector": "^0.17.0",
-        "phpunit/phpunit": "^10.2",
+        "phpunit/phpunit": "^9",
         "giorgiosironi/eris": "^0.14.0"
     },
     "license": "Blue Oak Model License 1.0.0",
