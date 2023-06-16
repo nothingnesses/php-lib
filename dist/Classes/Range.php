@@ -45,7 +45,10 @@ class Range {
 		 * @return Self
 		 */
 		return function (int $end) use ($start) : self {
-			return new self($start, $end);
+			return new self(
+ 			$start,
+ 			$end
+ 		);
 		};
 	}
 }

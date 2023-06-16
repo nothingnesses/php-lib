@@ -109,7 +109,10 @@ class Maybe implements I\Functor, I\Monad {
 	 * @return Maybe - A `some` variant containing the value.
 	 */
 	public static function some($item): self {
-		return new self(true, $item);
+		return new self(
+			true,
+			$item
+		);
 	}
 
 	/**
@@ -118,6 +121,9 @@ class Maybe implements I\Functor, I\Monad {
 	 * @return Maybe - A `none` variant.
 	 */
 	public static function none(): self {
-		return new self(false, null);
+		return new self(
+			false,
+			null
+		);
 	}
 }

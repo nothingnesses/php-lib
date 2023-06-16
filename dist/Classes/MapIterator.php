@@ -12,7 +12,6 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class MapIterator implements I\Iterator, I\MapIterator {
-	use T\FilterIterator, T\Iterator, T\MapIterator;
 	/**
 	 * @var I\Iterator
 	 */
@@ -21,6 +20,7 @@ class MapIterator implements I\Iterator, I\MapIterator {
 	 * @var \Closure
 	 */
 	private $mapper;
+	use T\FilterIterator, T\Iterator, T\MapIterator;
 
 	private function __construct(I\Iterator $iterator, \Closure $mapper)
 	{
@@ -37,11 +37,14 @@ class MapIterator implements I\Iterator, I\MapIterator {
 		/**
 		 * @param I\Iterator $iterator Iterator to map.
 		 */
-		return function (I\Iterator $iterator) use ($mapper) : self {
-			return new self(
- 			$iterator,
-				\Closure::fromCallable($mapper)
- 		);
+		$callable = $mapper;
+		/**
+		 * @param I\Iterator $iterator Iterator to map.
+		 */
+		return function (I\Iterator $iterator) use ($callable) : self {
+			return new self($iterator, function () use ($callable) {
+				return $callable(...func_get_args());
+			});
 		};
 	}
 

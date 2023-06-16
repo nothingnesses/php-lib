@@ -35,11 +35,14 @@ class DoubleEndedMapIterator implements I\DoubleEndedIterator, I\MapIterator {
 		/**
 		 * @param I\Iterator $iterator Iterator to map.
 		 */
-		return function (I\Iterator $iterator) use ($mapper) : self {
-			return new self(
- 			$iterator,
-				\Closure::fromCallable($mapper)
- 		);
+		$callable = $mapper;
+		/**
+		 * @param I\Iterator $iterator Iterator to map.
+		 */
+		return function (I\Iterator $iterator) use ($callable) : self {
+			return new self($iterator, function () use ($callable) {
+				return $callable(...func_get_args());
+			});
 		};
 	}
 

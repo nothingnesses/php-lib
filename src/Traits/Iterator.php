@@ -58,6 +58,10 @@ trait Iterator {
 
 	abstract public function next(): C\Maybe;
 
+	public function take_while(callable $predicate): C\TakeWhileIterator {
+		return C\TakeWhileIterator::new($predicate)($this);
+	}
+
 	public function to_array(): array {
 		$array = [];
 		$this->for_each(function ($item) use (&$array): void {

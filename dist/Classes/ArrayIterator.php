@@ -14,7 +14,6 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class ArrayIterator implements I\DoubleEndedIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 	/**
 	 * @var mixed[]
 	 */
@@ -23,6 +22,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	 * @var \Nothingnesses\Lib\Classes\RangeIterator
 	 */
 	private $index;
+	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(array $array, RangeIterator $index)
 	{
@@ -35,7 +35,10 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	 * @return Self<A>
 	 */
 	public static function new($array): self {
-		return new self($array, Range::new(0)(count($array) > 0 ? count($array) - 1 : 0)->iterate());
+		return new self(
+			$array,
+			Range::new(0)(count($array) > 0 ? count($array) - 1 : 0)->iterate()
+		);
 	}
 
 	public function next(): Maybe {

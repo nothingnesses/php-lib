@@ -12,12 +12,6 @@ use Nothingnesses\Lib\Traits as T;
  * An iterator over a range.
  */
 class RangeIterator implements I\DoubleEndedIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
-
-	/**
-	 * @var bool
-	 */
-	private $is_increasing;
 	/**
 	 * @var int
 	 */
@@ -30,6 +24,12 @@ class RangeIterator implements I\DoubleEndedIterator {
 	 * @var bool
 	 */
 	private $is_finished;
+	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+
+	/**
+	 * @var bool
+	 */
+	private $is_increasing;
 
 	private function __construct(
 		int $front,
@@ -52,7 +52,11 @@ class RangeIterator implements I\DoubleEndedIterator {
 		 * @return Self
 		 */
 		return function (int $end) use ($start) : self {
-			return new self($start, $end, false);
+			return new self(
+ 			$start,
+ 			$end,
+ 			false
+ 		);
 		};
 	}
 

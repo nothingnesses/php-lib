@@ -46,6 +46,7 @@ interface Iterator extends Functor {
 	 * @return \Closure(B $initial): B A closure that accepts the initial value and returns the reduced value.
 	 */
 	public function foldl(callable $fn): \Closure;
+
 	/**
 	 * Applies a function to each item in the iterator.
 	 *
@@ -67,6 +68,14 @@ interface Iterator extends Functor {
 	 * @return C\Maybe<A> The `some` variant containing the next item if it exists, or the `none` variant.
 	 */
 	public function next(): C\Maybe;
+
+	/**
+	 * Returns an iterator that returns items as long as they satisfy the provided predicate function.
+	 *
+	 * @param callable(A): bool $predicate The function applied to the items being iterated over to filter those that match the condition.
+	 * @return TakeWhileIterator<A> An iterator that returns items as long as they satisfy the provided predicate function.
+	 */
+	public function take_while(callable $predicate): C\TakeWhileIterator;
 
 	/**
 	 * Collects the items from the iterator into an array.
