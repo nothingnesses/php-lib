@@ -13,36 +13,51 @@ use Nothingnesses\Lib\Traits as T;
  * 
  * @template A
  */
-class ArrayIterator implements I\DoubleEndedIterator {
+class SplFixedArrayIterator implements I\DoubleEndedIterator {
+	/**
+	 * @var \SplFixedArray
+	 */
+	private $array;
+	/**
+	 * @var \Nothingnesses\Lib\Classes\RangeIterator
+	 */
+	private $index;
 	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
-	private function __construct(private array $array, private SplFixedArrayIterator $key) {
+	private function __construct(\SplFixedArray $array, RangeIterator $index)
+	{
+		$this->array = $array;
+		$this->index = $index;
 	}
 
 	/**
-	 * @param array<A> $array Array to return an iterator of.
+	 * @param \SplFixedArray<A> $array Array to return an iterator of.
 	 * @return Self<A>
 	 */
-	public static function new(array $array): self {
+	public static function new($array): self {
 		return new self(
-			array: $array,
-			key: SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array)))
+			$array,
+			Range::new(0)(count($array) > 0 ? count($array) - 1 : 0)->iterate()
 		);
 	}
 
 	public function next(): Maybe {
 		return count($this->array) > 0
-			? $this->key
+			? $this->index
 			->next()
-			->map(fn (int $key) => $this->array[$key])
+			->map(function (int $index) {
+				return $this->array[$index];
+			})
 			: Maybe::none();
 	}
 
 	public function next_back(): Maybe {
 		return count($this->array) > 0
-			? $this->key
+			? $this->index
 			->next_back()
-			->map(fn (int $key) => $this->array[$key])
+			->map(function (int $index) {
+				return $this->array[$index];
+			})
 			: Maybe::none();
 	}
 }

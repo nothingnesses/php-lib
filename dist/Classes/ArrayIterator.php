@@ -19,15 +19,15 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	 */
 	private $array;
 	/**
-	 * @var \Nothingnesses\Lib\Classes\RangeIterator
+	 * @var \Nothingnesses\Lib\Classes\SplFixedArrayIterator
 	 */
-	private $index;
+	private $key;
 	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
-	private function __construct(array $array, RangeIterator $index)
+	private function __construct(array $array, SplFixedArrayIterator $key)
 	{
 		$this->array = $array;
-		$this->index = $index;
+		$this->key = $key;
 	}
 
 	/**
@@ -37,26 +37,26 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	public static function new($array): self {
 		return new self(
 			$array,
-			Range::new(0)(count($array) > 0 ? count($array) - 1 : 0)->iterate()
+			SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array)))
 		);
 	}
 
 	public function next(): Maybe {
 		return count($this->array) > 0
-			? $this->index
+			? $this->key
 			->next()
-			->map(function (int $index) {
-				return $this->array[$index];
+			->map(function (int $key) {
+				return $this->array[$key];
 			})
 			: Maybe::none();
 	}
 
 	public function next_back(): Maybe {
 		return count($this->array) > 0
-			? $this->index
+			? $this->key
 			->next_back()
-			->map(function (int $index) {
-				return $this->array[$index];
+			->map(function (int $key) {
+				return $this->array[$key];
 			})
 			: Maybe::none();
 	}
