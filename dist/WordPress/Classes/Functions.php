@@ -14,7 +14,7 @@ class Functions {
 	 * @return array<WP_Post> The posts of a particular post type.
 	 */
 	public static function get_posts_by_type($post_type): array {
-		return get_posts(["post_type" => $post_type, "posts_per_page" => -1]);
+		return get_posts(["order" => "ASC", "orderby" => "menu_order", "posts_per_page" => -1, "post_type" => $post_type]);
 	}
 
 	/**
