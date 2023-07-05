@@ -14,7 +14,7 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class ArrayIterator implements I\DoubleEndedIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(private array $array, private SplFixedArrayIterator $key) {
 	}

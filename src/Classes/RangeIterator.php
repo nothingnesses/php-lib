@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Traits as T;
  * An iterator over a range.
  */
 class RangeIterator implements I\DoubleEndedIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private bool $is_increasing;
 

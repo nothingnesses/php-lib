@@ -23,6 +23,8 @@ class AncestorsIterator implements I\Iterator {
 	 * @var mixed[]
 	 */
 	private $posts;
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
+
 	private function __construct(C\Maybe $post, array $posts)
 	{
 		$this->post = $post;
@@ -60,6 +62,4 @@ class AncestorsIterator implements I\Iterator {
 			}
 		);
 	}
-
-	use T\FilterIterator, T\Iterator, T\MapIterator;
 }

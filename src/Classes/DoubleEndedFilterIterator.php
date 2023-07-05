@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class DoubleEndedFilterIterator implements I\DoubleEndedIterator, I\FilterIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(private I\DoubleEndedIterator $iterator, private \Closure $predicate) {
 	}

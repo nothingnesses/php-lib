@@ -26,7 +26,7 @@ class TakeWhileIterator implements I\Iterator {
 	 * @var bool
 	 */
 	private $is_finished;
-	use T\FilterIterator, T\Iterator, T\MapIterator;
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
 
 	private function __construct(I\Iterator $iterator, \Closure $predicate, bool $is_finished)
 	{

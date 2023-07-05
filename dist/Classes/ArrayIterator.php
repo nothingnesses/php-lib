@@ -22,7 +22,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	 * @var \Nothingnesses\Lib\Classes\SplFixedArrayIterator
 	 */
 	private $key;
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(array $array, SplFixedArrayIterator $key)
 	{

@@ -24,7 +24,7 @@ class RangeIterator implements I\DoubleEndedIterator {
 	 * @var bool
 	 */
 	private $is_finished;
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	/**
 	 * @var bool

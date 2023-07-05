@@ -20,7 +20,7 @@ class FilterIterator implements I\FilterIterator, I\Iterator {
 	 * @var \Closure
 	 */
 	private $predicate;
-	use T\FilterIterator, T\Iterator, T\MapIterator;
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
 
 	private function __construct(I\Iterator $iterator, \Closure $predicate)
 	{

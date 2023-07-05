@@ -12,6 +12,8 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class DoubleEndedMapIterator implements I\DoubleEndedIterator, I\MapIterator {
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+
 	private function __construct(private I\DoubleEndedIterator $iterator, private \Closure $mapper) {
 	}
 
@@ -37,6 +39,4 @@ class DoubleEndedMapIterator implements I\DoubleEndedIterator, I\MapIterator {
 	public function next_back(): Maybe {
 		return $this->iterator->next_back()->map($this->mapper);
 	}
-
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 }

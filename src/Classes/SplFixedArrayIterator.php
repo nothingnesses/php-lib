@@ -14,7 +14,7 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class SplFixedArrayIterator implements I\DoubleEndedIterator {
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(private \SplFixedArray $array, private RangeIterator $index) {
 	}

@@ -10,15 +10,24 @@ use Nothingnesses\Lib\Classes\ArrayIterator;
 class ArrayIteratorTest extends TestCase {
 	use Eris\TestTrait;
 
-	public function test_to_array() {
-		$this->forAll(Generator\seq(Generator\bool()))->then(function ($array) {
-			$this->assertEquals($array, ArrayIterator::new($array)->to_array());
+	public function test_append() {
+		$this->forAll(
+			Generator\seq(Generator\bool()),
+			Generator\seq(Generator\bool())
+		)->then(function ($first, $second) {
+			$this->assertEquals(
+				array_merge($first, $second),
+				ArrayIterator::new($first)->append(ArrayIterator::new($second))->to_array()
+			);
 		});
 	}
 
 	public function test_reverse() {
 		$this->forAll(Generator\seq(Generator\bool()))->then(function ($array) {
-			$this->assertEquals(array_reverse($array), ArrayIterator::new($array)->reverse()->to_array());
+			$this->assertEquals(
+				array_reverse($array),
+				ArrayIterator::new($array)->reverse()->to_array()
+			);
 		});
 	}
 
@@ -40,6 +49,12 @@ class ArrayIteratorTest extends TestCase {
 				$implementation($array),
 				ArrayIterator::new($array)->take_while($predicate)->to_array()
 			);
+		});
+	}
+
+	public function test_to_array() {
+		$this->forAll(Generator\seq(Generator\bool()))->then(function ($array) {
+			$this->assertEquals($array, ArrayIterator::new($array)->to_array());
 		});
 	}
 }

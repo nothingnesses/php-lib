@@ -22,7 +22,7 @@ class SplFixedArrayIterator implements I\DoubleEndedIterator {
 	 * @var \Nothingnesses\Lib\Classes\RangeIterator
 	 */
 	private $index;
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(\SplFixedArray $array, RangeIterator $index)
 	{

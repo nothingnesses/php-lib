@@ -14,7 +14,7 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class TakeWhileIterator implements I\Iterator {
-	use T\FilterIterator, T\Iterator, T\MapIterator;
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
 
 	private function __construct(private I\Iterator $iterator, private \Closure $predicate, private bool $is_finished) {
 	}

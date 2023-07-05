@@ -22,6 +22,14 @@ interface Iterator extends Functor {
 	public function any(callable $predicate): bool;
 
 	/**
+	 * Appends another Iterator.
+	 * 
+	 * @param I\Iterator<A> $second The other iterator to concatenate with the current one.
+	 * @return I\AppendIterator<A> An iterator that yields items from this iterator, then the other iterator.
+	 */
+	public function append(Iterator $second): AppendIterator;
+
+	/**
 	 * Filters the items in the iterator based on a given condition.
 	 *
 	 * @param callable(A): bool $predicate The function applied to the items being iterated over to filter those that match the condition.
@@ -42,7 +50,7 @@ interface Iterator extends Functor {
 	 * Applies a function to each item in the iterator, reducing the items to a single value from the left.
 	 *
 	 * @template B
-	 * @param callable(B $carry): callable(A $item): B $fn The function to apply to each item being iterated over.
+	 * @param callable(B $carry): (callable(A $item): B) $fn The function to apply to each item being iterated over.
 	 * @return \Closure(B $initial): B A closure that accepts the initial value and returns the reduced value.
 	 */
 	public function foldl(callable $fn): \Closure;

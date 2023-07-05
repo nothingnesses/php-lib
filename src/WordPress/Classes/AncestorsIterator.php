@@ -15,6 +15,8 @@ use WP_Post;
  * An iterator over a post's ancestors.
  */
 class AncestorsIterator implements I\Iterator {
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
+
 	private function __construct(private C\Maybe $post, private array $posts) {
 	}
 
@@ -48,6 +50,4 @@ class AncestorsIterator implements I\Iterator {
 			})
 		);
 	}
-
-	use T\FilterIterator, T\Iterator, T\MapIterator;
 }

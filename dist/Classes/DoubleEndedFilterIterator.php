@@ -20,7 +20,7 @@ class DoubleEndedFilterIterator implements I\DoubleEndedIterator, I\FilterIterat
 	 * @var \Closure
 	 */
 	private $predicate;
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(I\DoubleEndedIterator $iterator, \Closure $predicate)
 	{

@@ -18,7 +18,7 @@ class ReversedIterator implements I\DoubleEndedIterator {
 	 * @var I\DoubleEndedIterator
 	 */
 	private $iterator;
-	use T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
+	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
 	private function __construct(I\DoubleEndedIterator $iterator)
 	{

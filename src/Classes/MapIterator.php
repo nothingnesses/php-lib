@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Traits as T;
  * @template A
  */
 class MapIterator implements I\Iterator, I\MapIterator {
-	use T\FilterIterator, T\Iterator, T\MapIterator;
+	use T\AppendIterator, T\FilterIterator, T\Iterator, T\MapIterator;
 
 	private function __construct(private I\Iterator $iterator, private \Closure $mapper) {
 	}
