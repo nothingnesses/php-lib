@@ -45,7 +45,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 		return count($this->array) > 0
 			? $this->key
 			->next()
-			->map(function (int $key) {
+			->map(function ($key) {
 				return $this->array[$key];
 			})
 			: Maybe::none();
@@ -55,7 +55,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 		return count($this->array) > 0
 			? $this->key
 			->next_back()
-			->map(function (int $key) {
+			->map(function ($key) {
 				return $this->array[$key];
 			})
 			: Maybe::none();

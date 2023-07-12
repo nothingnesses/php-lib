@@ -34,7 +34,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 		return count($this->array) > 0
 			? $this->key
 			->next()
-			->map(fn (int $key) => $this->array[$key])
+			->map(fn ($key) => $this->array[$key])
 			: Maybe::none();
 	}
 
@@ -42,7 +42,7 @@ class ArrayIterator implements I\DoubleEndedIterator {
 		return count($this->array) > 0
 			? $this->key
 			->next_back()
-			->map(fn (int $key) => $this->array[$key])
+			->map(fn ($key) => $this->array[$key])
 			: Maybe::none();
 	}
 }
