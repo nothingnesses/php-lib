@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Interfaces as I;
  *
  * @template A
  */
-class Maybe implements I\Functor, I\Monad {
+class Maybe {
 	/**
 	 * @var bool
 	 */
@@ -30,7 +30,7 @@ class Maybe implements I\Functor, I\Monad {
 	 * @param callable $fn - The monadic function to be applied.
 	 * @return Maybe - A new Maybe value with the function applied.
 	 */
-	public function bind($fn): \Nothingnesses\Lib\Interfaces\Monad {
+	public function bind($fn): self {
 		return $this->is_some ? $fn($this->item) : self::none();
 	}
 
@@ -79,7 +79,7 @@ class Maybe implements I\Functor, I\Monad {
 	 * @param callable $fn - The function to be applied.
 	 * @return Maybe - A new Maybe value with the function applied.
 	 */
-	public function map($fn): \Nothingnesses\Lib\Interfaces\Functor {
+	public function map($fn): self {
 		return $this->is_some ? self::some($fn($this->item)) : self::none();
 	}
 

@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Interfaces as I;
  *
  * @template A
  */
-class Maybe implements I\Functor, I\Monad {
+class Maybe {
 	private function __construct(private bool $is_some, private $item) {
 	}
 

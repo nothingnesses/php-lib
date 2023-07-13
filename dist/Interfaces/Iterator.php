@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Classes as C;
  *
  * Represents an iterator that can iterate over a collection of elements.
  */
-interface Iterator extends Functor {
+interface Iterator {
 	/**
 	 * Checks if any item in the iterator matches a given condition.
 	 *
@@ -69,7 +69,7 @@ interface Iterator extends Functor {
 	 * @param callable(A): A $fn The function to apply to each item being iterated over.
 	 * @return MapIterator<A> An iterator over the results of applying the function over the items.
 	 */
-	public function map($fn): \Nothingnesses\Lib\Interfaces\Functor;
+	public function map($fn): MapIterator;
 
 	/**
 	 * Retrieves the next item from the iterator.

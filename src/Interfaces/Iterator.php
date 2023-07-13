@@ -12,7 +12,7 @@ use Nothingnesses\Lib\Classes as C;
  *
  * Represents an iterator that can iterate over a collection of elements.
  */
-interface Iterator extends Functor {
+interface Iterator {
 	/**
 	 * Checks if any item in the iterator matches a given condition.
 	 *
