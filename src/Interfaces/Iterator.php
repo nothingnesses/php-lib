@@ -53,7 +53,7 @@ interface Iterator {
 	 * @param callable(B $carry): (callable(A $item): B) $fn The function to apply to each item being iterated over.
 	 * @return \Closure(B $initial): B A closure that accepts the initial value and returns the reduced value.
 	 */
-	public function foldl(callable $fn): \Closure;
+	public function fold_left(callable $fn): \Closure;
 
 	/**
 	 * Applies a function to each item in the iterator.

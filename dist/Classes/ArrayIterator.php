@@ -19,12 +19,12 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	 */
 	private $array;
 	/**
-	 * @var \Nothingnesses\Lib\Classes\SplFixedArrayIterator
+	 * @var \Nothingnesses\Lib\Classes\Maybe
 	 */
 	private $key;
 	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
-	private function __construct(array $array, SplFixedArrayIterator $key)
+	private function __construct(array $array, Maybe $key)
 	{
 		$this->array = $array;
 		$this->key = $key;
@@ -37,27 +37,39 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	public static function new($array): self {
 		return new self(
 			$array,
-			SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array)))
+			count($array) > 0
+				? Maybe::some(SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array))))
+				: Maybe::none()
 		);
 	}
 
 	public function next(): Maybe {
-		return count($this->array) > 0
-			? $this->key
-			->next()
-			->map(function ($key) {
-				return $this->array[$key];
-			})
-			: Maybe::none();
+		return $this->key->bind(
+			function (SplFixedArrayIterator $key) {
+				return $key
+ 				->next()
+ 				->map(function (\SplFixedArray $args) {
+ 					$output = new \SplFixedArray(2);
+ 					$output[0] = $args[1];
+ 					$output[1] = $this->array[$args[1]];
+ 					return $output;
+ 				});
+			}
+		);
 	}
 
 	public function next_back(): Maybe {
-		return count($this->array) > 0
-			? $this->key
-			->next_back()
-			->map(function ($key) {
-				return $this->array[$key];
-			})
-			: Maybe::none();
+		return $this->key->bind(
+			function (SplFixedArrayIterator $key) {
+				return $key
+ 				->next_back()
+ 				->map(function (\SplFixedArray $args) {
+ 					$output = new \SplFixedArray(2);
+ 					$output[0] = $args[1];
+ 					$output[1] = $this->array[$args[1]];
+ 					return $output;
+ 				});
+			}
+		);
 	}
 }

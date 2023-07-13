@@ -16,7 +16,7 @@ use Nothingnesses\Lib\Traits as T;
 class SplFixedArrayIterator implements I\DoubleEndedIterator {
 	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
-	private function __construct(private \SplFixedArray $array, private RangeIterator $index) {
+	private function __construct(private \SplFixedArray $array, private Maybe $index) {
 	}
 
 	/**
@@ -26,23 +26,35 @@ class SplFixedArrayIterator implements I\DoubleEndedIterator {
 	public static function new(\SplFixedArray $array): self {
 		return new self(
 			array: $array,
-			index: Range::new(0)(count($array) > 0 ? count($array) - 1 : 0)->iterate()
+			index: count($array) > 0
+				? Maybe::some(Range::new(0)(count($array) - 1)->iterate())
+				: Maybe::none()
 		);
 	}
 
 	public function next(): Maybe {
-		return count($this->array) > 0
-			? $this->index
-			->next()
-			->map(fn (int $index) => $this->array[$index])
-			: Maybe::none();
+		return $this->index->bind(
+			fn ($index) => $index
+				->next()
+				->map(function ($index) {
+					$output = new \SplFixedArray(2);
+					$output[0] = $index;
+					$output[1] = $this->array[$index];
+					return $output;
+				})
+		);
 	}
 
 	public function next_back(): Maybe {
-		return count($this->array) > 0
-			? $this->index
-			->next_back()
-			->map(fn (int $index) => $this->array[$index])
-			: Maybe::none();
+		return $this->index->bind(
+			fn ($index) => $index
+				->next_back()
+				->map(function ($index) {
+					$output = new \SplFixedArray(2);
+					$output[0] = $index;
+					$output[1] = $this->array[$index];
+					return $output;
+				})
+		);
 	}
 }

@@ -15,44 +15,44 @@ trait Iterator {
 	}
 
 	public function find(callable $predicate): C\Maybe {
-		$current = $this->next();
-		while ($current->is_some()) {
+		for (
+			$current = $this->next();
+			$current->is_some();
+			$current = $this->next()
+		) {
 			$result = $current->bind(fn ($item) => $predicate($item)
 				? C\Maybe::some($item)
 				: C\Maybe::none());
 			if ($result->is_some()) {
 				return $result;
 			}
-			$current = $this->next();
 		}
 		return C\Maybe::none();
 	}
 
-	public function foldl(callable $fn): \Closure {
+	public function fold_left(callable $fn): \Closure {
 		/**
 		 * @param B $initial The initial value to use.
 		 * @return B
 		 */
 		return function ($initial) use ($fn) {
 			$carry = $initial;
-			$current = $this->next();
-			while ($current->is_some()) {
-				$current->map(function ($item) use ($fn, &$carry): void {
-					$carry = $fn($carry)($item);
-				});
-				$current = $this->next();
-			}
+			$this->for_each(function ($item) use ($fn, &$carry) {
+				$carry = $fn($carry)($item);
+			});
 			return $carry;
 		};
 	}
 
 	public function for_each(callable $fn): void {
-		$current = $this->next();
-		while ($current->is_some()) {
+		for (
+			$current = $this->next();
+			$current->is_some();
+			$current = $this->next()
+		) {
 			$current->map(function ($item) use ($fn): void {
 				$fn($item);
 			});
-			$current = $this->next();
 		}
 	}
 

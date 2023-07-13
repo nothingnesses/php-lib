@@ -42,25 +42,4 @@ HTML;
 		echo self::dump($args);
 		die();
 	}
-
-	/**
-	 * Identity function that returns the input value as is.
-	 *
-	 * @template A
-	 * @param A $a - The input value.
-	 * @return A - The input value itself.
-	 */
-	public static function id($a) {
-		return $a;
-	}
-
-	/**
-	 * Echoes a string. Wraps over the `echo` language construct.
-	 *
-	 * @param string $string - The string to be echoed.
-	 * @return void
-	 */
-	public static function echo_($string) {
-		echo ($string);
-	}
 }

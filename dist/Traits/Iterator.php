@@ -21,8 +21,11 @@ trait Iterator {
 	 * @param callable $predicate
 	 */
 	public function find($predicate): C\Maybe {
-		$current = $this->next();
-		while ($current->is_some()) {
+		for (
+			$current = $this->next();
+			$current->is_some();
+			$current = $this->next()
+		) {
 			$result = $current->bind(function ($item) use ($predicate) {
 				return $predicate($item)
  				? C\Maybe::some($item)
@@ -31,7 +34,6 @@ trait Iterator {
 			if ($result->is_some()) {
 				return $result;
 			}
-			$current = $this->next();
 		}
 		return C\Maybe::none();
 	}
@@ -39,20 +41,16 @@ trait Iterator {
 	/**
 	 * @param callable $fn
 	 */
-	public function foldl($fn): \Closure {
+	public function fold_left($fn): \Closure {
 		/**
 		 * @param B $initial The initial value to use.
 		 * @return B
 		 */
 		return function ($initial) use ($fn) {
 			$carry = $initial;
-			$current = $this->next();
-			while ($current->is_some()) {
-				$current->map(function ($item) use ($fn, &$carry) {
-					$carry = $fn($carry)($item);
-				});
-				$current = $this->next();
-			}
+			$this->for_each(function ($item) use ($fn, &$carry) {
+				$carry = $fn($carry)($item);
+			});
 			return $carry;
 		};
 	}
@@ -62,12 +60,14 @@ trait Iterator {
 	 * @return void
 	 */
 	public function for_each($fn) {
-		$current = $this->next();
-		while ($current->is_some()) {
+		for (
+			$current = $this->next();
+			$current->is_some();
+			$current = $this->next()
+		) {
 			$current->map(function ($item) use ($fn) {
 				$fn($item);
 			});
-			$current = $this->next();
 		}
 	}
 

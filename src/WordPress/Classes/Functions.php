@@ -24,6 +24,7 @@ class Functions {
 	 */
 	public static function get_root_posts($posts) {
 		return C\ArrayIterator::new($posts)
+			->map(fn ($item) => $item[1])
 			->filter(fn (WP_Post $post) => $post->post_parent === 0);
 	}
 
@@ -48,6 +49,7 @@ class Functions {
 		 * @return Maybe<WP_Post> The post wrapped in a `Maybe`.
 		 */
 		return fn (int $id): C\Maybe => C\ArrayIterator::new($posts)
+			->map(fn ($item) => $item[1])
 			->find(fn (WP_Post $post): bool => $id === $post->ID);
 	}
 
@@ -75,6 +77,7 @@ class Functions {
 		 * @return C\DoubleEndedFilterIterator<WP_Post> An iterator over the children.
 		 */
 		return fn (WP_Post $post): C\DoubleEndedFilterIterator => C\ArrayIterator::new($posts)
+			->map(fn ($item) => $item[1])
 			->filter(fn (WP_Post $current_post) => $post->ID === $current_post->post_parent);
 	}
 
@@ -90,6 +93,7 @@ class Functions {
 		 * @return DoubleEndedFilterIterator<WP_Post> An iterator over the siblings.
 		 */
 		return fn (WP_Post $post): C\DoubleEndedFilterIterator => C\ArrayIterator::new($posts)
+			->map(fn ($item) => $item[1])
 			->filter(fn (WP_Post $current_post) => $post->post_parent === $current_post->post_parent);
 	}
 

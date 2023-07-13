@@ -24,6 +24,9 @@ class Functions {
 	 */
 	public static function get_root_posts($posts) {
 		return C\ArrayIterator::new($posts)
+			->map(function ($item) {
+				return $item[1];
+			})
 			->filter(function (WP_Post $post) {
 				return $post->post_parent === 0;
 			});
@@ -53,6 +56,9 @@ class Functions {
 		 */
 		return function (int $id) use ($posts) : C\Maybe {
 			return C\ArrayIterator::new($posts)
+ 			->map(function ($item) {
+					return $item[1];
+				})
  			->find(function (WP_Post $post) use ($id) : bool {
 					return $id === $post->ID;
 				});
@@ -86,6 +92,9 @@ class Functions {
 		 */
 		return function (WP_Post $post) use ($posts) : C\DoubleEndedFilterIterator {
 			return C\ArrayIterator::new($posts)
+ 			->map(function ($item) {
+					return $item[1];
+				})
  			->filter(function (WP_Post $current_post) use ($post) {
 					return $post->ID === $current_post->post_parent;
 				});
@@ -105,6 +114,9 @@ class Functions {
 		 */
 		return function (WP_Post $post) use ($posts) : C\DoubleEndedFilterIterator {
 			return C\ArrayIterator::new($posts)
+ 			->map(function ($item) {
+					return $item[1];
+				})
  			->filter(function (WP_Post $current_post) use ($post) {
 					return $post->post_parent === $current_post->post_parent;
 				});

@@ -16,7 +16,7 @@ use Nothingnesses\Lib\Traits as T;
 class ArrayIterator implements I\DoubleEndedIterator {
 	use T\DoubleEndedAppendIterator, T\DoubleEndedIterator, T\DoubleEndedFilterIterator, T\DoubleEndedMapIterator, T\Iterator;
 
-	private function __construct(private array $array, private SplFixedArrayIterator $key) {
+	private function __construct(private array $array, private Maybe $key) {
 	}
 
 	/**
@@ -26,23 +26,35 @@ class ArrayIterator implements I\DoubleEndedIterator {
 	public static function new(array $array): self {
 		return new self(
 			array: $array,
-			key: SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array)))
+			key: count($array) > 0
+				? Maybe::some(SplFixedArrayIterator::new(\SplFixedArray::fromArray(array_keys($array))))
+				: Maybe::none()
 		);
 	}
 
 	public function next(): Maybe {
-		return count($this->array) > 0
-			? $this->key
-			->next()
-			->map(fn ($key) => $this->array[$key])
-			: Maybe::none();
+		return $this->key->bind(
+			fn (SplFixedArrayIterator $key) => $key
+				->next()
+				->map(function (\SplFixedArray $args) {
+					$output = new \SplFixedArray(2);
+					$output[0] = $args[1];
+					$output[1] = $this->array[$args[1]];
+					return $output;
+				})
+		);
 	}
 
 	public function next_back(): Maybe {
-		return count($this->array) > 0
-			? $this->key
-			->next_back()
-			->map(fn ($key) => $this->array[$key])
-			: Maybe::none();
+		return $this->key->bind(
+			fn (SplFixedArrayIterator $key) => $key
+				->next_back()
+				->map(function (\SplFixedArray $args) {
+					$output = new \SplFixedArray(2);
+					$output[0] = $args[1];
+					$output[1] = $this->array[$args[1]];
+					return $output;
+				})
+		);
 	}
 }
