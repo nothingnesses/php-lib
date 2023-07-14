@@ -5,13 +5,12 @@ declare(strict_types=1);
 
 namespace Nothingnesses\Lib\Classes;
 
+use Nothingnesses\Lib\Classes as C;
 use Nothingnesses\Lib\Interfaces as I;
 use Nothingnesses\Lib\Traits as T;
 
 /**
  * An inclusive range.
- * 
- * @template A
  */
 class Range {
 	/**
@@ -29,10 +28,10 @@ class Range {
 	}
 
 	/**
-	 * @return RangeIterator An iterator over the range.
+	 * @return C\Iterator\Range An iterator over the range.
 	 */
-	public function iterate(): RangeIterator {
-		return RangeIterator::new($this->start)($this->end);
+	public function iterate(): C\Iterator\Range {
+		return C\Iterator\Range::new($this->start)($this->end);
 	}
 
 	/**

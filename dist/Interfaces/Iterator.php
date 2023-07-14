@@ -6,90 +6,99 @@ declare(strict_types=1);
 namespace Nothingnesses\Lib\Interfaces;
 
 use Nothingnesses\Lib\Classes as C;
+use Nothingnesses\Lib\Interfaces as I;
 
 /**
+ * Functions for a type that can iterate over a set of items.
+ * 
  * @template A
- *
- * Represents an iterator that can iterate over a collection of elements.
  */
 interface Iterator {
 	/**
-	 * Checks if any item in the iterator matches a given condition.
+	 * Checks if any of the items yielded by the iterator satisfy a predicate
+	 * function.
 	 *
-	 * @param callable(A): bool $predicate The function applied to the item being iterated over to test if it matches the condition.
-	 * @return bool `true` if any item matches the condition, `false` otherwise.
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if any match a condition.
+	 * @return bool `true` if an item matches the condition, `false` otherwise.
 	 */
-	public function any($predicate): bool;
+	public function any($fn): bool;
 
 	/**
-	 * Appends another Iterator.
-	 *
-	 * @param \Nothingnesses\Lib\Interfaces\Iterator $second The other iterator to concatenate with the current one.
-	 * @return I\AppendIterator<A> An iterator that yields items from this iterator, then the other iterator.
+	 * Returns an iterator that yields items from the current iterator, then from
+	 * another iterator.
+	 * 
+	 * @param I\Iterator<A> $second The other iterator to concatenate with the current one.
+	 * @return I\Iterator<A>
 	 */
-	public function append($second): AppendIterator;
+	public function chain($second);
 
 	/**
-	 * Filters the items in the iterator based on a given condition.
+	 * Returns an iterator that yields items that satisfy a predicate function.
 	 *
-	 * @param callable(A): bool $predicate The function applied to the items being iterated over to filter those that match the condition.
-	 * @return FilterIterator<A> An iterator over the items matching the condition.
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
+	 * @return I\Iterator<A>
 	 */
-	public function filter($predicate): FilterIterator;
+	public function filter($fn);
 
 	/**
-	 * Finds the first item in the iterator that matches a given condition.
+	 * Returns the first item in the iterator that satisfies a predicate
+	 * function.
 	 *
-	 * @param callable(A): bool $predicate The function applied to the item being iterated over to test if it matches the condition.
-	 * @return C\Maybe<A> The `some` variant containing the first item that matches the condition, if it exists, or the `none` variant.
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
+	 * @return C\Maybe<A> The `some` variant containing the first item that matches the condition if it exists, or the `none` variant.
 	 */
-	public function find($predicate): C\Maybe;
-
+	public function find($fn): C\Maybe;
 
 	/**
-	 * Applies a function to each item in the iterator, reducing the items to a single value from the left.
+	 * Left-associative fold operation.
+	 * Applies a binary function to an initial accumulator value and the first
+	 * item of the iterator, then uses the result as the new accumulator value.
+	 * The process is then repeated for each of the remaining items of the
+	 * iterator.
 	 *
 	 * @template B
-	 * @param callable(B $carry): (callable(A $item): B) $fn The function to apply to each item being iterated over.
+	 * @param callable(B $carry): (callable(A $item): B) $fn The function to apply to each item yielded.
 	 * @return \Closure(B $initial): B A closure that accepts the initial value and returns the reduced value.
 	 */
 	public function fold_left($fn): \Closure;
 
 	/**
-	 * Applies a function to each item in the iterator.
+	 * Applies a function to each item yielded by the iterator.
 	 *
-	 * @param callable(A): void $fn The function to apply to each item being iterated over.
+	 * @param callable(A): void $fn The function to apply to each item yielded.
 	 * @return void
 	 */
 	public function for_each($fn);
 
 	/**
-	 * Applies a function to each item in the iterator and returns the output.
+	 * Returns an iterator that yields items that are the result of applying a
+	 * function to items yielded by the current iterator.
 	 *
-	 * @param callable(A): A $fn The function to apply to each item being iterated over.
-	 * @return MapIterator<A> An iterator over the results of applying the function over the items.
+	 * @template B
+	 * @param callable(A): B $fn The function to apply to each item yielded.
+	 * @return \Nothingnesses\Lib\Interfaces\Iterator<\Nothingnesses\Lib\Interfaces\B>
 	 */
-	public function map($fn): MapIterator;
+	public function map($fn);
 
 	/**
-	 * Retrieves the next item from the iterator.
+	 * Returns the next item from the iterator.
 	 *
 	 * @return C\Maybe<A> The `some` variant containing the next item if it exists, or the `none` variant.
 	 */
 	public function next(): C\Maybe;
 
 	/**
-	 * Returns an iterator that returns items as long as they satisfy the provided predicate function.
+	 * Returns an iterator that yields items as long as they satisfy a predicate function.
 	 *
-	 * @param callable(A): bool $predicate The function applied to the items being iterated over to filter those that match the condition.
-	 * @return TakeWhileIterator<A> An iterator that returns items as long as they satisfy the provided predicate function.
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
+	 * @return I\Iterator<A>
 	 */
-	public function take_while($predicate): C\TakeWhileIterator;
+	public function take_while($fn);
 
 	/**
 	 * Collects the items from the iterator into an array.
 	 *
-	 * @return array<A> An array containing the items collected from the iterator.
+	 * @return array<A>
 	 */
 	public function to_array(): array;
 }

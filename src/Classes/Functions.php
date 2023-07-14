@@ -9,7 +9,7 @@ class Functions {
 	/**
 	 * Formats an array of values for debugging purposes.
 	 *
-	 * @param array $args - The array of values to be dumped.
+	 * @param array<mixed> $args - The array of values to be dumped.
 	 * @return string - The formatted string representation of the values.
 	 */
 	public static function dump(array $args): string {
@@ -31,7 +31,7 @@ class Functions {
 	/**
 	 * Formats an array of values for debugging purposes and ends script execution.
 	 *
-	 * @param array $args - The array of values to be dumped.
+	 * @param array<mixed> $args - The array of values to be dumped.
 	 * @return void
 	 */
 	public static function dd(array $args): void {

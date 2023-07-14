@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace Nothingnesses\Lib\WordPress\Classes;
 
 use Nothingnesses\Lib\Classes as C;
+use Nothingnesses\Lib\Interfaces as I;
+use Nothingnesses\Lib\WordPress\Classes as WC;
 use WP_Post;
 
 class Functions {
@@ -20,14 +22,14 @@ class Functions {
 	/**
 	 * Gets root posts, i.e., those without a parent post.
 	 * @param array<WP_Post> $posts The posts to search through.
-	 * @return C\DoubleEndedFilterIterator<WP_Post> An iterator over the root posts.
+	 * @return I\Iterator<WP_Post>&I\DoubleEnded<WP_Post> An iterator over the root posts.
 	 */
 	public static function get_root_posts($posts) {
-		return C\ArrayIterator::new($posts)
-			->map(function ($item) {
-				return $item[1];
+		return C\Iterator\ArrayIterator::new($posts)
+			->map(function (C\Pair $item) : WP_Post {
+				return $item->second;
 			})
-			->filter(function (WP_Post $post) {
+			->filter(function (WP_Post $post) : bool {
 				return $post->post_parent === 0;
 			});
 	}
@@ -39,8 +41,9 @@ class Functions {
 	public static function get_first_page_url($posts): C\Maybe {
 		return self::get_root_posts($posts)
 			->next()
-			->map(function ($post) {
-				return get_permalink($post->ID);
+			->bind(function (WP_Post $post) {
+				$url = get_permalink($post->ID);
+				return gettype($url) === "boolean" ? C\Maybe::none() : (gettype($url) === "string" ? C\Maybe::some($url) : null);
 			});
 	}
 
@@ -55,10 +58,16 @@ class Functions {
 		 * @return Maybe<WP_Post> The post wrapped in a `Maybe`.
 		 */
 		return function (int $id) use ($posts) : C\Maybe {
-			return C\ArrayIterator::new($posts)
- 			->map(function ($item) {
-					return $item[1];
-				})
+			return C\Iterator\ArrayIterator::new($posts)
+ 			->map(
+ 				/**
+ 				 * @param C\Pair<int,WP_Post> $item
+ 				 * @return WP_Post
+ 				 */
+ 				function (C\Pair $item) {
+						return $item->second;
+					}
+ 			)
  			->find(function (WP_Post $post) use ($id) : bool {
 					return $id === $post->ID;
 				});
@@ -83,17 +92,17 @@ class Functions {
 	/**
 	 * Returns an iterator over the given post's children, according to the order in the CMS.
 	 * @param array<WP_Post> $posts The array to search posts in.
-	 * @return \Closure(WP_Post): C\DoubleEndedFilterIterator<WP_Post>
+	 * @return \Closure(WP_Post): (I\Iterator<WP_Post>&I\DoubleEnded<WP_Post>)
 	 */
 	public static function get_children_iterator($posts): \Closure {
 		/**
 		 * @param WP_Post $post The post to get the children of.
-		 * @return C\DoubleEndedFilterIterator<WP_Post> An iterator over the children.
+		 * @return I\Iterator<WP_Post>&I\DoubleEnded<WP_Post> An iterator over the children.
 		 */
-		return function (WP_Post $post) use ($posts) : C\DoubleEndedFilterIterator {
-			return C\ArrayIterator::new($posts)
+		return function (WP_Post $post) use ($posts) : I\Iterator {
+			return C\Iterator\ArrayIterator::new($posts)
  			->map(function ($item) {
-					return $item[1];
+					return $item->second;
 				})
  			->filter(function (WP_Post $current_post) use ($post) {
 					return $post->ID === $current_post->post_parent;
@@ -104,18 +113,18 @@ class Functions {
 	/**
 	 * Returns an iterator over the given post's siblings and itself, according to the order in the CMS.
 	 * @param array<WP_Post> $posts The array to search posts in.
-	 * @return \Closure(WP_Post): C\DoubleEndedFilterIterator<WP_Post>
+	 * @return \Closure(WP_Post): (I\Iterator<WP_Post>&I\DoubleEnded<WP_Post>)
 	 */
 	public static function get_siblings_iterator($posts): \Closure {
 		/**
 		 * @note: Can't use `get_post` for this, since ID 0 isn't a post. 
 		 * @param WP_Post $post The post to get the siblings of.
-		 * @return DoubleEndedFilterIterator<WP_Post> An iterator over the siblings.
+		 * @return I\Iterator<WP_Post>&I\DoubleEnded<WP_Post> An iterator over the siblings.
 		 */
-		return function (WP_Post $post) use ($posts) : C\DoubleEndedFilterIterator {
-			return C\ArrayIterator::new($posts)
+		return function (WP_Post $post) use ($posts) : I\Iterator {
+			return C\Iterator\ArrayIterator::new($posts)
  			->map(function ($item) {
-					return $item[1];
+					return $item->second;
 				})
  			->filter(function (WP_Post $current_post) use ($post) {
 					return $post->post_parent === $current_post->post_parent;
@@ -204,7 +213,7 @@ class Functions {
 	/**
 	 * Returns the post next to a post, if it exists. This could either be its first child if it has children, or its next sibling if it has one, or the next sibling of its closest ancestor with a next sibling if the post has neither children nor a younger sibling.
 	 * @param array<WP_Post> $posts The array to search posts in.
-	 * @return Closure(WP_Post): C\Maybe<WP_Post>
+	 * @return \Closure(WP_Post): C\Maybe<WP_Post>
 	 */
 	public static function get_next_post($posts) {
 		/**
@@ -222,7 +231,7 @@ class Functions {
 				$next_sibling = $get_next_sibling($post);
 				return $next_sibling->maybe_lazy(
 					function () use ($posts, $post, $get_next_sibling) {
-						return AncestorsIterator::new($posts)($post)
+						return WC\Iterator\Ancestors::new($posts)($post)
  						->filter(function ($ancestor) use ($get_next_sibling) {
 								return $get_next_sibling($ancestor)->is_some();
 							})

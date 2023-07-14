@@ -8,105 +8,114 @@ namespace Nothingnesses\Lib\Classes;
 use Nothingnesses\Lib\Interfaces as I;
 
 /**
- * Maybe class representing an optional value that may or may not be present.
+ * An optional value that may or may not be present.
  *
- * @template A
+ * @template-covariant A
  */
 class Maybe {
-	private function __construct(private bool $is_some, private $item) {
+	/**
+	 * @param bool $is_some States if the instance is the `some` variant or not.
+	 * @param A|null $item The wrapped value.
+	 */
+	private function __construct(private bool $is_some, private mixed $item) {
 	}
 
 	/**
-	 * Chains a monadic function over the wrapped value.
+	 * Returns a `some` containing the result of applying a function to the
+	 * currently contained value, if it exists. Otherwise, returns `none`.
 	 *
-	 * @param callable $fn - The monadic function to be applied.
-	 * @return Maybe - A new Maybe value with the function applied.
+	 * @template B
+	 * @param callable(A): Maybe<B> $fn - The function to be applied.
+	 * @return Maybe<B>
 	 */
 	public function bind(callable $fn): self {
-		return $this->is_some ? $fn($this->item) : self::none();
+		return $this->is_some() && !is_null($this->item) ? $fn($this->item) : self::none();
 	}
 
 	/**
-	 * Checks if the Maybe value is of the `some` variant.
+	 * Checks if the instance is of the `some` variant.
 	 *
-	 * @return bool - `true` if the Maybe value is `some`, else `false`.
+	 * @return bool `true` if the instance is `some`, else `false`.
 	 */
 	public function is_some(): bool {
 		return $this->is_some;
 	}
 
 	/**
-	 * Extracts the value from the Maybe value or returns a default value.
+	 * Returns the value contained if the instance is of the `some` variant,
+	 * or returns a default value if not.
 	 *
 	 * @template B
-	 * @param B $on_none - Default value to return if `$maybe` is `none`.
-	 * @return B - The value or the default value.
+	 * @param B $on_none Default value to return if the instance is a `none`.
+	 * @return B
 	 */
 	public function from_maybe($on_none) {
-		return $this->is_some ? $this->item : $on_none;
+		return $this->is_some() && !is_null($this->item) ? $this->item : $on_none;
 	}
 
 	/**
-	 * Applies a function to the item in the Maybe value conditionally.
+	 * Returns a `some` containing the result of applying a function to the
+	 * currently contained value, if it exists. Otherwise, returns `none`.
 	 *
 	 * @template B
-	 * @param B $on_none - Default value to return if `$maybe` is `none`.
-	 * @return \Closure(callable(A): B): B - A closure that takes a function and returns the result of applying it conditionally.
+	 * @param callable(A): B $fn - The function to be applied.
+	 * @return Maybe<B>
+	 */
+	public function map(callable $fn): self {
+		return $this->is_some() && !is_null($this->item) ? self::some($fn($this->item)) : self::none();
+	}
+
+	/**
+	 * Returns the result of applies a function to the wrapped value, if it
+	 * exists. Otherwise, returns a default value.
+	 *
+	 * @template B
+	 * @param B $on_none - Default value to return if self is `none`.
+	 * @return \Closure(callable(A): B): B - Function to apply.
 	 */
 	public function maybe($on_none): \Closure {
 		/**
-		 * Applies a function to the item in the Maybe value conditionally.
-		 *
 		 * @param callable(A): B $on_some - Function applied to item in self if it is `some`.
-		 * @return B - The result of applying the function.
+		 * @return B
 		 */
-		return fn (callable $on_some) => $this->is_some ? $on_some($this->item) : $on_none;
+		return fn (callable $on_some) => $this->is_some() && !is_null($this->item) ? $on_some($this->item) : $on_none;
 	}
 
 	/**
-	 * Maps a function over the wrapped value.
-	 *
-	 * @param callable $fn - The function to be applied.
-	 * @return Maybe - A new Maybe value with the function applied.
-	 */
-	public function map(callable $fn): self {
-		return $this->is_some ? self::some($fn($this->item)) : self::none();
-	}
-
-	/**
-	 * Applies a function to the item in the Maybe value conditionally or lazily returns a default value.
+	 * Returns the result of applies a function to the wrapped value, if it
+	 * exists. Otherwise, returns a the result of calling a thunk.
 	 *
 	 * @template B
-	 * @param callable(): B $on_none - Thunk called to return a default value if `$maybe` is `none`.
-	 * @return \Closure(callable(A): callable(): B): B - A closure that takes a function and returns the result of applying it conditionally.
+	 * @param callable(): B $on_none - Thunk called to return a default value if self is `none`.
+	 * @return \Closure(callable(A): B): B - Function to apply.
 	 */
 	public function maybe_lazy(callable $on_none): \Closure {
 		/**
-		 * Applies a function to the item in the Maybe value conditionally or lazily returns a default value.
-		 *
 		 * @param callable(A): B $on_some - Function applied to item in self if it is `some`, or the result of calling `$on_none`.
-		 * @return B - The result of applying the function or the default value.
+		 * @return B
 		 */
-		return fn (callable $on_some) => $this->is_some ? $on_some($this->item) : $on_none();
+		return fn (callable $on_some) => $this->is_some() && !is_null($this->item) ? $on_some($this->item) : $on_none();
 	}
 
 	/**
-	 * Creates a Maybe value of the `some` variant containing a value.
+	 * Makes an instanace of the `some` variant containing a value.
 	 *
-	 * @param mixed $item - The value to be wrapped.
-	 * @return Maybe - A `some` variant containing the value.
+	 * @template B
+	 * @param B $item - The value to be wrapped.
+	 * @return Maybe<B>
 	 */
-	public static function some($item): self {
+	public static function some(mixed $item): self {
 		return new self(
 			is_some: true,
 			item: $item
 		);
 	}
 
+	// @note Ideally, this should return `Maybe<B>`, like the `some` constructor.
 	/**
-	 * Creates a Maybe value of the `none` variant.
+	 * Makes an instance of the `none` variant.
 	 *
-	 * @return Maybe - A `none` variant.
+	 * @return Maybe<mixed>
 	 */
 	public static function none(): self {
 		return new self(
