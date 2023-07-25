@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace Nothingnesses\Lib\Classes;
 
-use Nothingnesses\Lib\Interfaces as I;
-
 /**
  * An optional value that may or may not be present.
  *
@@ -40,7 +38,7 @@ class Maybe {
 	 * @return Maybe<B>
 	 */
 	public function bind($fn): self {
-		return $this->is_some() && !is_null($this->item) ? $fn($this->item) : self::none();
+		return ($this->is_some() && !is_null($this->item)) ? $fn($this->item) : self::none();
 	}
 
 	/**
@@ -61,7 +59,7 @@ class Maybe {
 	 * @return B
 	 */
 	public function from_maybe($on_none) {
-		return $this->is_some() && !is_null($this->item) ? $this->item : $on_none;
+		return ($this->is_some() && !is_null($this->item)) ? $this->item : $on_none;
 	}
 
 	/**
@@ -73,16 +71,16 @@ class Maybe {
 	 * @return Maybe<B>
 	 */
 	public function map($fn): self {
-		return $this->is_some() && !is_null($this->item) ? self::some($fn($this->item)) : self::none();
+		return ($this->is_some() && !is_null($this->item)) ? self::some($fn($this->item)) : self::none();
 	}
 
 	/**
-	 * Returns the result of applies a function to the wrapped value, if it
+	 * Returns the result of applying a function to the wrapped value, if it
 	 * exists. Otherwise, returns a default value.
 	 *
 	 * @template B
 	 * @param B $on_none - Default value to return if self is `none`.
-	 * @return \Closure(callable(A): B): B - Function to apply.
+	 * @return \Closure(callable(A): B): B
 	 */
 	public function maybe($on_none): \Closure {
 		/**
@@ -90,7 +88,7 @@ class Maybe {
 		 * @return B
 		 */
 		return function (callable $on_some) use ($on_none) {
-			return $this->is_some() && !is_null($this->item) ? $on_some($this->item) : $on_none;
+			return ($this->is_some() && !is_null($this->item)) ? $on_some($this->item) : $on_none;
 		};
 	}
 
@@ -100,7 +98,7 @@ class Maybe {
 	 *
 	 * @template B
 	 * @param callable(): B $on_none - Thunk called to return a default value if self is `none`.
-	 * @return \Closure(callable(A): B): B - Function to apply.
+	 * @return \Closure(callable(A): B): B
 	 */
 	public function maybe_lazy($on_none): \Closure {
 		/**
@@ -108,12 +106,12 @@ class Maybe {
 		 * @return B
 		 */
 		return function (callable $on_some) use ($on_none) {
-			return $this->is_some() && !is_null($this->item) ? $on_some($this->item) : $on_none();
+			return ($this->is_some() && !is_null($this->item)) ? $on_some($this->item) : $on_none();
 		};
 	}
 
 	/**
-	 * Makes an instanace of the `some` variant containing a value.
+	 * Makes an instance of the `some` variant containing a value.
 	 *
 	 * @template B
 	 * @param mixed $item - The value to be wrapped.

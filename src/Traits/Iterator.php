@@ -124,11 +124,11 @@ trait Iterator {
 		for (
 			$current = $this->next();
 			$current->is_some();
-			$current = $this->next()
 		) {
 			$current->map(function ($item) use ($fn): void {
 				$fn($item);
 			});
+			$current = $this->next();
 		}
 	}
 
@@ -181,6 +181,16 @@ trait Iterator {
 	 */
 	public function skip_while(callable $fn): I\Iterator {
 		return C\Iterator\SkipWhile::new($fn)($this);
+	}
+
+	/**
+	 * Returns an iterator that yields the first item, then every nth item.
+	 *
+	 * @param int $n Number of items to skip on every step.
+	 * @return I\Iterator<A>
+	 */
+	public function step_by(int $n): I\Iterator {
+		return C\Iterator\StepBy::new($n)($this);
 	}
 
 	/**

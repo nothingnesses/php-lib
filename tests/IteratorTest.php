@@ -7,6 +7,9 @@ use Eris\Generator;
 use PHPUnit\Framework\TestCase;
 use Nothingnesses\Lib\Classes as C;
 
+/**
+ * @todo Add test for `nth_back`.
+ */
 class IteratorTest extends TestCase {
 	use Eris\TestTrait;
 
@@ -190,6 +193,30 @@ class IteratorTest extends TestCase {
 						->skip_while($predicate)
 						->to_array()
 				);
+			});
+	}
+
+	public function test_step_by(): void {
+		$this
+			->forAll(
+				Generator\seq(Generator\int()),
+				Generator\choose(1, 9)
+			)
+			->then(function ($ints, $step) {
+				$implementation = function (array $array, int $step): array {
+					$output = [];
+					$count = count($array);
+					for ($i = 0; $i < $count; $i += $step) {
+						array_push($output, $array[$i]);
+					}
+					return $output;
+				};
+				$a = $implementation($ints, $step);
+				$b = C\Iterator\ArrayIterator::new($ints)
+					->map(fn ($item) => $item->second)
+					->step_by($step)
+					->to_array();
+				$this->assertEquals($a, $b);
 			});
 	}
 

@@ -15,11 +15,30 @@ use Nothingnesses\Lib\Interfaces as I;
  */
 interface DoubleEnded {
 	/**
+	 * Advances from the back by up to the specified number of items.
+	 * Returns `right<null>` if successful, or `left<int>` if not.
+	 * The `left` will contain the remaining number of steps.
+	 *
+	 * @param int $index The integer to advance the iterator by from the back.
+	 * @return C\Either<int,null>
+	 */
+	public function advance_back_by(int $index): C\Either;
+
+	/**
 	 * Returns the next item from the back.
 	 *
 	 * @return C\Maybe<A> `some` variant containing the next item from the back if it exists, or the `none` variant if not.
 	 */
 	public function next_back(): C\Maybe;
+
+	/**
+	 * Returns the nth item from the back wrapped in `some` if it exists,
+	 * or `none` if not.
+	 *
+	 * @param int $index The integer to index into the iterator with.
+	 * @return C\Maybe<A>
+	 */
+	public function nth_back(int $index): C\Maybe;
 
 	/**
 	 * Returns an instance that yields items from the current instance in

@@ -14,7 +14,7 @@ use Nothingnesses\Lib\Traits as T;
  * @implements I\DoubleEnded<A>
  * @implements I\Iterator<A>
  */
-class Filter implements I\DoubleEnded, I\Iterator {
+class StepBy implements I\DoubleEnded, I\Iterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
@@ -28,31 +28,46 @@ class Filter implements I\DoubleEnded, I\Iterator {
 	}
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to filter the items of.
-	 * @param \Closure(A): bool $fn Function applied to the items being iterated over to filter those that match a condition.
+	 * @param bool $is_first States if this is the first time yielding an item.
+	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
+	 * @param int $step Number of items to skip on every step.
 	 */
-	private function __construct(private I\DoubleEnded&I\Iterator $iterator, private \Closure $fn) {
+	private function __construct(private bool $is_first, private I\DoubleEnded&I\Iterator $iterator, private int $step) {
 	}
 
 	/**
-	 * @param callable(A): bool $fn Function applied to the items being iterated over to filter those that match a condition.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): C\Iterator\DoubleEnded\Filter<A>
+	 * @param int $step Number of items to skip on every step.
+	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
 	 */
-	public static function new(callable $fn): \Closure {
+	public static function new(int $step): \Closure {
+		if ($step < 1) {
+			exit("Step < 1");
+		}
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to filter the items of.
+		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
 		 */
 		return fn (I\DoubleEnded&I\Iterator $iterator): self => new self(
-			fn: \Closure::fromCallable($fn),
-			iterator: $iterator
+			is_first: true,
+			iterator: $iterator,
+			step: $step
 		);
 	}
 
 	public function next(): C\Maybe {
-		return $this->iterator->find($this->fn);
+		if ($this->is_first) {
+			$this->is_first = false;
+			return $this->iterator->next();
+		} else {
+			return $this->iterator->nth($this->step - 1);
+		}
 	}
 
 	public function next_back(): C\Maybe {
-		return $this->iterator->reverse_find($this->fn);
+		if ($this->is_first) {
+			$this->is_first = false;
+			return $this->iterator->next_back();
+		} else {
+			return $this->iterator->nth_back($this->step - 1);
+		}
 	}
 }

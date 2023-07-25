@@ -25,6 +25,7 @@ class Once implements I\DoubleEnded, I\Iterator {
 		T\Iterator\DoubleEnded::filter insteadof T\Iterator;
 		T\Iterator\DoubleEnded::map insteadof T\Iterator;
 		T\Iterator\DoubleEnded::skip insteadof T\Iterator;
+		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
 	}
 
 	/**

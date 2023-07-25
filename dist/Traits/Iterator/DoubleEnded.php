@@ -13,6 +13,23 @@ use Nothingnesses\Lib\Interfaces as I;
  */
 trait DoubleEnded {
 	/**
+	 * Advances from the back by up to the specified number of items.
+	 * Returns `right<null>` if successful, or `left<int>` if not.
+	 * The `left` will contain the remaining number of steps.
+	 *
+	 * @param int $index The amount to advance the iterator by from the back.
+	 * @return C\Either<int,null>
+	 */
+	public function advance_back_by($index): C\Either {
+		for ($remaining = $index; $remaining > 0; --$remaining) {
+			if (!($this->next_back()->is_some())) {
+				return C\Either::left($remaining);
+			}
+		}
+		return C\Either::right(null);
+	}
+
+	/**
 	 * Returns an iterator that yields items from the current iterator, then from
 	 * another iterator.
 	 *
@@ -51,6 +68,18 @@ trait DoubleEnded {
 	 * @return C\Maybe<A> `some` variant containing the next item from the back if it exists, or the `none` variant if not.
 	 */
 	abstract public function next_back(): C\Maybe;
+
+	/**
+	 * Returns the nth item from the back wrapped in `some` if it exists,
+	 * or `none` if not.
+	 *
+	 * @param int $index The integer to index into the instance with.
+	 * @return C\Maybe<A>
+	 */
+	public function nth_back($index): C\Maybe {
+		$this->advance_back_by($index);
+		return $this->next_back();
+	}
 
 	/**
 	 * Returns an iterator that yields items from the current iterator in
@@ -93,5 +122,15 @@ trait DoubleEnded {
 	 */
 	public function skip($n) {
 		return C\Iterator\DoubleEnded\Skip::new($n)($this);
+	}
+
+	/**
+	 * Returns an iterator that yields the first item, then every nth item.
+	 *
+	 * @param int $n Number of items to skip on every step.
+	 * @return I\DoubleEnded<A>&I\Iterator<A>
+	 */
+	public function step_by($n) {
+		return C\Iterator\DoubleEnded\StepBy::new($n)($this);
 	}
 }
