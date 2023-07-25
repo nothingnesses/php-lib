@@ -19,7 +19,7 @@ trait DoubleEnded {
 	 * @param I\DoubleEnded<A>&I\Iterator<A> $second The other iterator to concatenate with the current one.
 	 * @return I\DoubleEnded<A>&I\Iterator<A>
 	 */
-	public function chain(I\Iterator $second): I\Iterator {
+	public function chain(I\Iterator $second): I\DoubleEnded&I\Iterator {
 		return C\Iterator\DoubleEnded\Chain::new($this)($second);
 	}
 
@@ -29,7 +29,7 @@ trait DoubleEnded {
 	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
 	 * @return I\DoubleEnded<A>&I\Iterator<A>
 	 */
-	public function filter(callable $fn): I\Iterator {
+	public function filter(callable $fn): I\DoubleEnded&I\Iterator {
 		return C\Iterator\DoubleEnded\Filter::new($fn)($this);
 	}
 
@@ -41,7 +41,7 @@ trait DoubleEnded {
 	 * @param callable(A): B $fn The function to apply to each item yielded.
 	 * @return I\DoubleEnded<B>&I\Iterator<B>
 	 */
-	public function map(callable $fn): I\Iterator {
+	public function map(callable $fn): I\DoubleEnded&I\Iterator {
 		return C\Iterator\DoubleEnded\Map::new($fn)($this);
 	}
 
@@ -58,7 +58,7 @@ trait DoubleEnded {
 	 *
 	 * @return I\DoubleEnded<A>&I\Iterator<A> An iterator that iterates items in reverse.
 	 */
-	public function reverse(): I\DoubleEnded {
+	public function reverse(): I\DoubleEnded&I\Iterator {
 		return C\Iterator\Reverse::new($this);
 	}
 
@@ -80,5 +80,16 @@ trait DoubleEnded {
 			$current = $this->next_back();
 		}
 		return C\Maybe::none();
+	}
+
+	/**
+	 * Returns an iterator that yields items after skipping the specified number
+	 * of items.
+	 *
+	 * @param int $n The number of items to skip.
+	 * @return I\DoubleEnded<A>&I\Iterator<A>
+	 */
+	public function skip(int $n): I\DoubleEnded&I\Iterator {
+		return C\Iterator\DoubleEnded\Skip::new($n)($this);
 	}
 }

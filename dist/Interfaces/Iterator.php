@@ -108,11 +108,19 @@ interface Iterator {
 	 * Returns an iterator that yields items after skipping the specified number
 	 * of items.
 	 *
-	 * @param int $int The number of items to skip.
+	 * @param int $n The number of items to skip.
 	 * @return I\Iterator<A>
-	 * @param int $n
 	 */
 	public function skip($n);
+
+	/**
+	 * Returns an iterator that yields items after skipping items that satisfy a
+	 * predicate function.
+	 *
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
+	 * @return I\Iterator<A>
+	 */
+	public function skip_while($fn);
 
 	/**
 	 * Returns an iterator that yields items as long as they satisfy a predicate function.

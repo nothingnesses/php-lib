@@ -33,6 +33,7 @@ class SplFixedArray implements I\DoubleEnded, I\Iterator {
 		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
 		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
 		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
+		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
 	}
 
 	/**

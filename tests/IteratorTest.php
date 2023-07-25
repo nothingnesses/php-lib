@@ -118,14 +118,14 @@ class IteratorTest extends TestCase {
 			->withMaxSize(200)
 			->then(function ($ints, $int) {
 				switch (true) {
-					case empty($ints):
+					case empty($ints) && gettype($ints) === "array":
 						$this->assertEquals(
 							C\Maybe::none(),
 							C\Iterator\ArrayIterator::new($ints)
 								->nth($int)
 						);
 						break;
-					case count($ints) - 1 >= $int:
+					case count($ints) - 1 >= $int && gettype($ints) === "array":
 						$this->assertEquals(
 							C\Maybe::some($ints[$int]),
 							C\Iterator\ArrayIterator::new($ints)
@@ -141,6 +141,18 @@ class IteratorTest extends TestCase {
 			});
 	}
 
+	public function test_once(): void {
+		$this
+			->forAll(Generator\int())
+			->then(function (int $int) {
+				$this->assertEquals(
+					[$int],
+					C\Iterator\DoubleEnded\Once::new($int)
+						->to_array()
+				);
+			});
+	}
+
 	public function test_reverse(): void {
 		$this
 			->forAll(Generator\seq(Generator\bool()))
@@ -150,6 +162,32 @@ class IteratorTest extends TestCase {
 					C\Iterator\ArrayIterator::new($array)
 						->reverse()
 						->map(fn ($item) => $item->second)
+						->to_array()
+				);
+			});
+	}
+
+	public function test_skip_while(): void {
+		$this
+			->forAll(Generator\seq(Generator\bool()))
+			->then(function ($array) {
+				$predicate = fn (bool $bool): bool => $bool === true;
+				$implementation = function (array $array, callable $predicate): array {
+					$output = [];
+					$tripwire = true;
+					foreach ($array as $value) {
+						if ($tripwire && !$predicate($value)) {
+							$tripwire = false;
+						}
+						array_push($output, $value);
+					}
+					return $output;
+				};
+				$this->assertEquals(
+					$implementation($array, $predicate),
+					C\Iterator\ArrayIterator::new($array)
+						->map(fn ($item) => $item->second)
+						->skip_while($predicate)
 						->to_array()
 				);
 			});

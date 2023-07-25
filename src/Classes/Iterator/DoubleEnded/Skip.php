@@ -3,24 +3,18 @@
 //phpcs:disable Generic.Commenting,Generic.WhiteSpace,PEAR.Classes.ClassDeclaration,PEAR.Commenting.ClassComment,PEAR.Commenting.FunctionComment,PEAR.Formatting.MultiLineAssignment,PEAR.Functions.FunctionCallSignature,PEAR.Functions.FunctionDeclaration,PEAR.NamingConventions,PEAR.WhiteSpace
 declare(strict_types=1);
 
-namespace Nothingnesses\Lib\Classes\Iterator;
+namespace Nothingnesses\Lib\Classes\Iterator\DoubleEnded;
 
 use Nothingnesses\Lib\Classes as C;
 use Nothingnesses\Lib\Interfaces as I;
 use Nothingnesses\Lib\Traits as T;
 
 /**
- * An iterator over items of another iterator, in reverse.
- * 
  * @template A
  * @implements I\DoubleEnded<A>
  * @implements I\Iterator<A>
  */
-class Reverse implements I\DoubleEnded, I\Iterator {
-	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
-	 */
-	private $iterator;
+class Skip implements I\DoubleEnded, I\Iterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
@@ -33,26 +27,32 @@ class Reverse implements I\DoubleEnded, I\Iterator {
 	}
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator The iterator to yield items of in reverse.
+	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to skip the items of.
 	 */
-	private function __construct(I\Iterator $iterator)
-	{
-		$this->iterator = $iterator;
+	private function __construct(private I\DoubleEnded&I\Iterator $iterator) {
 	}
 
 	/**
-	 * @param I\Iterator $iterator Iterator to return a reversed version of.
-	 * @return C\Iterator\Reverse<A>
+	 * @param int $n The number of items to skip.
+	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
 	 */
-	public static function new($iterator): self {
-		return new self($iterator);
+	public static function new(int $n): \Closure {
+		/**
+		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to skip the items of.
+		 */
+		return function (I\DoubleEnded&I\Iterator $iterator) use ($n): self {
+			for ($a = 0; $a < $n; ++$a) {
+				$iterator->next();
+			}
+			return new self(iterator: $iterator);
+		};
 	}
 
 	public function next(): C\Maybe {
-		return $this->iterator->next_back();
+		return $this->iterator->next();
 	}
 
 	public function next_back(): C\Maybe {
-		return $this->iterator->next();
+		return $this->iterator->next_back();
 	}
 }

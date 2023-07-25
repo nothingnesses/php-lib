@@ -34,7 +34,7 @@
             "vendor/bin/rector process -- dist"
         ],
         "test": [
-            "vendor/bin/phpunit tests/IteratorTest.php"
+            "vendor/bin/phpunit -v --debug tests/IteratorTest.php"
         ]
     },
     "config": {
