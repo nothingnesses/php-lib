@@ -13,6 +13,27 @@ use Nothingnesses\Lib\Interfaces as I;
  */
 trait Iterator {
 	/**
+	 * Checks if all the items yielded by the iterator satisfy a predicate
+	 * function.
+	 *
+	 * @param callable(A): bool $fn The function applied to the items yielded to test if all match a condition.
+	 * @return bool `true` if all items match the condition, `false` otherwise.
+	 */
+	public function all($fn): bool {
+		$output = true;
+		for (
+			$current = $this->next();
+			$current->is_some() && $output;
+			$current = $this->next()
+		) {
+			$current->map(function ($item) use ($fn, &$output) {
+				$output = $fn($item);
+			});
+		}
+		return $output;
+	}
+
+	/**
 	 * Checks if any of the items yielded by the iterator satisfy a predicate
 	 * function.
 	 *

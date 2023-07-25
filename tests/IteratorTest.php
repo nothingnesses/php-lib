@@ -10,6 +10,26 @@ use Nothingnesses\Lib\Classes as C;
 class IteratorTest extends TestCase {
 	use Eris\TestTrait;
 
+	public function test_all(): void {
+		$is_true = fn (bool $a): bool => $a === true;
+		$this
+			->forAll(
+				Generator\seq(Generator\bool())
+			)
+			->then(function ($array) use ($is_true) {
+				$this->assertEquals(
+					array_reduce(
+						$array,
+						fn ($carry, $item) => $carry && $is_true($item),
+						true
+					),
+					C\Iterator\ArrayIterator::new($array)
+						->map(fn (C\Pair $pair): bool => $pair->second)
+						->all($is_true)
+				);
+			});
+	}
+
 	public function test_any(): void {
 		$this
 			->forAll(

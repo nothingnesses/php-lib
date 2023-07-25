@@ -22,7 +22,7 @@ interface DoubleEnded {
 	public function next_back(): C\Maybe;
 
 	/**
-	 * Returns an iterator that yields items from the current iterator in
+	 * Returns an instance that yields items from the current instance in
 	 * reverse, up to the last item to be yielded before the reversal.
 	 *
 	 * @return I\DoubleEnded<A> An type that yields items in reverse.
