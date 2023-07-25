@@ -96,6 +96,23 @@ interface Iterator {
 	public function next(): C\Maybe;
 
 	/**
+	 * Returns the nth item wrapped in `some` if it exists, or `none` if not.
+	 *
+	 * @param int $index The integer to index into the iterator with.
+	 * @return C\Maybe<A>
+	 */
+	public function nth(int $index): C\Maybe;
+
+	/**
+	 * Returns an iterator that yields items after skipping the specified number
+	 * of items.
+	 *
+	 * @param int $int The number of items to skip.
+	 * @return I\Iterator<A>
+	 */
+	public function skip(int $n): I\Iterator;
+
+	/**
 	 * Returns an iterator that yields items as long as they satisfy a predicate function.
 	 *
 	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.

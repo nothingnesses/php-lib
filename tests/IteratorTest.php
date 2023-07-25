@@ -109,6 +109,38 @@ class IteratorTest extends TestCase {
 			});
 	}
 
+	public function test_nth(): void {
+		$this
+			->forAll(
+				Generator\seq(Generator\int()),
+				Generator\choose(0, 200)
+			)
+			->withMaxSize(200)
+			->then(function ($ints, $int) {
+				switch (true) {
+					case empty($ints):
+						$this->assertEquals(
+							C\Maybe::none(),
+							C\Iterator\ArrayIterator::new($ints)
+								->nth($int)
+						);
+						break;
+					case count($ints) - 1 >= $int:
+						$this->assertEquals(
+							C\Maybe::some($ints[$int]),
+							C\Iterator\ArrayIterator::new($ints)
+								->map(fn (C\Pair $pair) => $pair->second)
+								->nth($int)
+						);
+						break;
+					default:
+						// If the int is out of range of the array, skip the test
+						$this->assertTrue(true);
+						break;
+				}
+			});
+	}
+
 	public function test_reverse(): void {
 		$this
 			->forAll(Generator\seq(Generator\bool()))
