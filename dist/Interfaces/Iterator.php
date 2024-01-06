@@ -35,9 +35,9 @@ interface Iterator {
 	/**
 	 * Returns an iterator that yields items from the current iterator, then from
 	 * another iterator.
-	 * 
-	 * @param I\Iterator<A> $second The other iterator to concatenate with the current one.
-	 * @return I\Iterator<A>
+	 *
+	 * @param I\Iterator|I\DoubleEndedIterator $second The other iterator to concatenate with the current one.
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
 	public function chain($second);
 
@@ -45,7 +45,7 @@ interface Iterator {
 	 * Returns an iterator that yields items that satisfy a predicate function.
 	 *
 	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
 	public function filter($fn);
 
@@ -85,7 +85,7 @@ interface Iterator {
 	 *
 	 * @template B
 	 * @param callable(A): B $fn The function to apply to each item yielded.
-	 * @return \Nothingnesses\Lib\Interfaces\Iterator<\Nothingnesses\Lib\Interfaces\B>
+	 * @return \Nothingnesses\Lib\Interfaces\Iterator<\Nothingnesses\Lib\Interfaces\B>|\Nothingnesses\Lib\Interfaces\DoubleEndedIterator<\Nothingnesses\Lib\Interfaces\B>
 	 */
 	public function map($fn);
 
@@ -109,7 +109,7 @@ interface Iterator {
 	 * of items.
 	 *
 	 * @param int $n The number of items to skip.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
 	public function skip($n);
 
@@ -126,7 +126,7 @@ interface Iterator {
 	 * Returns an iterator that yields the first item, then every nth item.
 	 *
 	 * @param int $n Number of items to skip on every step.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
 	public function step_by($n);
 

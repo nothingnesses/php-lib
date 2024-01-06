@@ -50,10 +50,10 @@ trait Iterator {
 	 * Returns an iterator that yields items from the current iterator, then from
 	 * another iterator.
 	 * 
-	 * @param I\Iterator<A> $second The other iterator to concatenate with the current one.
-	 * @return I\Iterator<A>
+	 * @param I\Iterator<A>|I\DoubleEndedIterator<A> $second The other iterator to concatenate with the current one.
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
-	public function chain(I\Iterator $second): I\Iterator {
+	public function chain(I\Iterator|I\DoubleEndedIterator $second): I\Iterator|I\DoubleEndedIterator {
 		return match (true) {
 			($this instanceof I\DoubleEndedIterator && $second instanceof I\DoubleEndedIterator) => C\Iterator\DoubleEnded\Chain::new($this)($second),
 			default => C\Iterator\Chain::new($this)($second)
@@ -64,9 +64,9 @@ trait Iterator {
 	 * Returns an iterator that yields items that satisfy a predicate function.
 	 *
 	 * @param callable(A): bool $fn The function applied to the items yielded to test if they match a condition.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
-	public function filter(callable $fn): I\Iterator {
+	public function filter(callable $fn): I\Iterator|I\DoubleEndedIterator {
 		return match (true) {
 			($this instanceof I\DoubleEndedIterator) => C\Iterator\DoubleEnded\Filter::new($fn)($this),
 			default => C\Iterator\Filter::new($fn)($this)
@@ -144,9 +144,9 @@ trait Iterator {
 	 *
 	 * @template B
 	 * @param callable(A): B $fn The function to apply to each item yielded.
-	 * @return I\Iterator<B>
+	 * @return I\Iterator<B>|I\DoubleEndedIterator<B>
 	 */
-	public function map(callable $fn): I\Iterator {
+	public function map(callable $fn): I\Iterator|I\DoubleEndedIterator {
 		return match (true) {
 			($this instanceof I\DoubleEndedIterator) => C\Iterator\DoubleEnded\Map::new($fn)($this),
 			default => C\Iterator\Map::new($fn)($this)
@@ -175,9 +175,9 @@ trait Iterator {
 	 * of items.
 	 *
 	 * @param int $n The number of items to skip.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
-	public function skip(int $n): I\Iterator {
+	public function skip(int $n): I\Iterator|I\DoubleEndedIterator {
 		return match (true) {
 			($this instanceof I\DoubleEndedIterator) => C\Iterator\DoubleEnded\Skip::new($n)($this),
 			default => C\Iterator\Skip::new($n)($this)
@@ -199,9 +199,9 @@ trait Iterator {
 	 * Returns an iterator that yields the first item, then every nth item.
 	 *
 	 * @param int $n Number of items to skip on every step.
-	 * @return I\Iterator<A>
+	 * @return I\Iterator<A>|I\DoubleEndedIterator<A>
 	 */
-	public function step_by(int $n): I\Iterator {
+	public function step_by(int $n): I\Iterator|I\DoubleEndedIterator {
 		return match (true) {
 			($this instanceof I\DoubleEndedIterator) => C\Iterator\DoubleEnded\StepBy::new($n)($this),
 			default => C\Iterator\StepBy::new($n)($this)
