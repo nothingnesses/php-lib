@@ -14,10 +14,9 @@ use Nothingnesses\Lib\Traits as T;
  * 
  * @template A of int|string
  * @template V
- * @implements I\DoubleEnded<C\Pair<A,V>>
- * @implements I\Iterator<C\Pair<A,V>>
+ * @implements I\DoubleEndedIterator<C\Pair<A,V>>
  */
-class ArrayIterator implements I\DoubleEnded, I\Iterator {
+class ArrayIterator implements I\DoubleEndedIterator {
 	/**
 	 * @var array<A, V>
 	 */
@@ -30,13 +29,7 @@ class ArrayIterator implements I\DoubleEnded, I\Iterator {
 	 * @use T\Iterator<C\Pair<A,V>>
 	 * @use T\Iterator\DoubleEnded<C\Pair<A,V>>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @param array<A,V> $array Array to return an iterator of.

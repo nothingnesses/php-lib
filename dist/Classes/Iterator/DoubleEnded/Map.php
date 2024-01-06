@@ -11,12 +11,11 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Map implements I\DoubleEnded, I\Iterator {
+class Map implements I\DoubleEndedIterator {
 	/**
-	 * @var I\DoubleEnded<B>&I\Iterator<B>
+	 * @var I\DoubleEndedIterator<B>
 	 */
 	private $iterator;
 	/**
@@ -27,20 +26,14 @@ class Map implements I\DoubleEnded, I\Iterator {
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @template B
-	 * @param I\DoubleEnded<B>&I\Iterator<B> $iterator Iterator to map the items of.
+	 * @param I\DoubleEndedIterator<B> $iterator Iterator to map the items of.
 	 * @param \Closure(B): A $fn Function applied to the items yielded.
 	 */
-	private function __construct($iterator, \Closure $fn)
+	private function __construct(I\DoubleEndedIterator $iterator, \Closure $fn)
 	{
 		$this->iterator = $iterator;
 		$this->fn = $fn;
@@ -49,19 +42,19 @@ class Map implements I\DoubleEnded, I\Iterator {
 	/**
 	 * @template B
 	 * @param callable(B): A $fn Function applied to the items yielded.
-	 * @return \Closure(I\DoubleEnded<B>&I\Iterator<B>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @return \Closure(I\DoubleEndedIterator<B>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new($fn): \Closure {
 		/**
-		 * @param I\DoubleEnded<B>&I\Iterator<B> $iterator Iterator to map the items of.
-		 * @return I\DoubleEnded<A>&I\Iterator<A>
+		 * @param I\DoubleEndedIterator<B> $iterator Iterator to map the items of.
+		 * @return I\DoubleEndedIterator<A>
 		 */
 		$callable = $fn;
 		/**
-		 * @param I\DoubleEnded<B>&I\Iterator<B> $iterator Iterator to map the items of.
-		 * @return I\DoubleEnded<A>&I\Iterator<A>
+		 * @param I\DoubleEndedIterator<B> $iterator Iterator to map the items of.
+		 * @return I\DoubleEndedIterator<A>
 		 */
-		return function ($iterator) use ($callable) : self {
+		return function (I\DoubleEndedIterator $iterator) use ($callable) : self {
 			return new self($iterator, function () use ($callable) {
 				return $callable(...func_get_args());
 			});

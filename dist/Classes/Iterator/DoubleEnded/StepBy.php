@@ -11,16 +11,15 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class StepBy implements I\DoubleEnded, I\Iterator {
+class StepBy implements I\DoubleEndedIterator {
 	/**
 	 * @var bool
 	 */
 	private $is_first;
 	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
+	 * @var I\DoubleEndedIterator<A>
 	 */
 	private $iterator;
 	/**
@@ -31,20 +30,14 @@ class StepBy implements I\DoubleEnded, I\Iterator {
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @param bool $is_first States if this is the first time yielding an item.
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $iterator Iterator to yield items from.
 	 * @param int $step Number of items to skip on every step.
 	 */
-	private function __construct(bool $is_first, $iterator, int $step)
+	private function __construct(bool $is_first, I\DoubleEndedIterator $iterator, int $step)
 	{
 		$this->is_first = $is_first;
 		$this->iterator = $iterator;
@@ -53,16 +46,16 @@ class StepBy implements I\DoubleEnded, I\Iterator {
 
 	/**
 	 * @param int $step Number of items to skip on every step.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @return \Closure(I\DoubleEndedIterator<A>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new($step): \Closure {
 		if ($step < 1) {
 			exit("Step < 1");
 		}
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
+		 * @param I\DoubleEndedIterator<A> $iterator Iterator to yield items from.
 		 */
-		return function ($iterator) use ($step) : self {
+		return function (I\DoubleEndedIterator $iterator) use ($step) : self {
 			return new self(
  			true,
  			$iterator,

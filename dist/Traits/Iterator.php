@@ -54,7 +54,7 @@ trait Iterator {
 	 * @return I\Iterator<A>
 	 */
 	public function chain($second): I\Iterator {
-		return C\Iterator\Chain::new($this)($second);
+		return true === ($this instanceof I\DoubleEndedIterator && $second instanceof I\DoubleEndedIterator) ? C\Iterator\DoubleEnded\Chain::new($this)($second) : C\Iterator\Chain::new($this)($second);
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait Iterator {
 	 * @return I\Iterator<A>
 	 */
 	public function filter($fn): I\Iterator {
-		return C\Iterator\Filter::new($fn)($this);
+		return true === $this instanceof I\DoubleEndedIterator ? C\Iterator\DoubleEnded\Filter::new($fn)($this) : C\Iterator\Filter::new($fn)($this);
 	}
 
 	/**
@@ -144,7 +144,7 @@ trait Iterator {
 	 * @return I\Iterator<B>
 	 */
 	public function map($fn): I\Iterator {
-		return C\Iterator\Map::new($fn)($this);
+		return true === $this instanceof I\DoubleEndedIterator ? C\Iterator\DoubleEnded\Map::new($fn)($this) : C\Iterator\Map::new($fn)($this);
 	}
 
 	/**
@@ -172,7 +172,7 @@ trait Iterator {
 	 * @return I\Iterator<A>
 	 */
 	public function skip($n): I\Iterator {
-		return C\Iterator\Skip::new($n)($this);
+		return true === $this instanceof I\DoubleEndedIterator ? C\Iterator\DoubleEnded\Skip::new($n)($this) : C\Iterator\Skip::new($n)($this);
 	}
 
 	/**
@@ -193,7 +193,7 @@ trait Iterator {
 	 * @return I\Iterator<A>
 	 */
 	public function step_by($n): I\Iterator {
-		return C\Iterator\StepBy::new($n)($this);
+		return true === $this instanceof I\DoubleEndedIterator ? C\Iterator\DoubleEnded\StepBy::new($n)($this) : C\Iterator\StepBy::new($n)($this);
 	}
 
 	/**

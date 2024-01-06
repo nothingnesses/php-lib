@@ -13,21 +13,14 @@ use Nothingnesses\Lib\Traits as T;
  * An iterator over items in a fixed array.
  * 
  * @template A
- * @implements I\DoubleEnded<C\Pair<int,A>>
- * @implements I\Iterator<C\Pair<int,A>>
+ * @implements I\DoubleEndedIterator<C\Pair<int,A>>
  */
-class SplFixedArray implements I\DoubleEnded, I\Iterator {
+class SplFixedArray implements I\DoubleEndedIterator {
 	/**
 	 * @use T\Iterator<C\Pair<int,A>>
 	 * @use T\Iterator\DoubleEnded<C\Pair<int,A>>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @param \SplFixedArray<A> $array Array to return an iterator of.

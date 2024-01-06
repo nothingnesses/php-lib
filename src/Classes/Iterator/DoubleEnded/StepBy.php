@@ -11,42 +11,35 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class StepBy implements I\DoubleEnded, I\Iterator {
+class StepBy implements I\DoubleEndedIterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @param bool $is_first States if this is the first time yielding an item.
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $iterator Iterator to yield items from.
 	 * @param int $step Number of items to skip on every step.
 	 */
-	private function __construct(private bool $is_first, private I\DoubleEnded&I\Iterator $iterator, private int $step) {
+	private function __construct(private bool $is_first, private I\DoubleEndedIterator $iterator, private int $step) {
 	}
 
 	/**
 	 * @param int $step Number of items to skip on every step.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @return \Closure(I\DoubleEndedIterator<A>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new(int $step): \Closure {
 		if ($step < 1) {
 			exit("Step < 1");
 		}
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to yield items from.
+		 * @param I\DoubleEndedIterator<A> $iterator Iterator to yield items from.
 		 */
-		return fn (I\DoubleEnded&I\Iterator $iterator): self => new self(
+		return fn (I\DoubleEndedIterator $iterator): self => new self(
 			is_first: true,
 			iterator: $iterator,
 			step: $step

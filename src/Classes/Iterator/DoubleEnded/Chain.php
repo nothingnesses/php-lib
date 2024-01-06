@@ -11,39 +11,32 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Chain implements I\DoubleEnded, I\Iterator {
+class Chain implements I\DoubleEndedIterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
+	use T\Iterator, T\Iterator\DoubleEnded;
+
+	/**
+	 * @param I\DoubleEndedIterator<A> $first First iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $second Second iterator to yield items from.
+	 */
+	private function __construct(private I\DoubleEndedIterator $first, private I\DoubleEndedIterator $second) {
 	}
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $first First iterator to yield items from.
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $second Second iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $first First iterator to yield items from.
+	 * @return \Closure(I\DoubleEndedIterator<A>): (I\DoubleEndedIterator<A>)
 	 */
-	private function __construct(private I\DoubleEnded&I\Iterator $first, private I\DoubleEnded&I\Iterator $second) {
-	}
-
-	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $first First iterator to yield items from.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
-	 */
-	public static function new(I\DoubleEnded&I\Iterator $first): \Closure {
+	public static function new(I\DoubleEndedIterator $first): \Closure {
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $second Second iterator to yields items from.
-		 * @return I\DoubleEnded<A>&I\Iterator<A>
+		 * @param I\DoubleEndedIterator<A> $second Second iterator to yields items from.
+		 * @return I\DoubleEndedIterator<A>
 		 */
-		return fn (I\DoubleEnded&I\Iterator $second): self => new self(
+		return fn (I\DoubleEndedIterator $second): self => new self(
 			first: $first,
 			second: $second
 		);

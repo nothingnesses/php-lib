@@ -11,50 +11,43 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Chain implements I\DoubleEnded, I\Iterator {
+class Chain implements I\DoubleEndedIterator {
 	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
+	 * @var I\DoubleEndedIterator<A>
 	 */
 	private $first;
 	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
+	 * @var I\DoubleEndedIterator<A>
 	 */
 	private $second;
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $first First iterator to yield items from.
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $second Second iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $first First iterator to yield items from.
+	 * @param I\DoubleEndedIterator<A> $second Second iterator to yield items from.
 	 */
-	private function __construct($first, $second)
+	private function __construct(I\DoubleEndedIterator $first, I\DoubleEndedIterator $second)
 	{
 		$this->first = $first;
 		$this->second = $second;
 	}
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $first First iterator to yield items from.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @param I\DoubleEndedIterator<A> $first First iterator to yield items from.
+	 * @return \Closure(I\DoubleEndedIterator<A>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new($first): \Closure {
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $second Second iterator to yields items from.
-		 * @return I\DoubleEnded<A>&I\Iterator<A>
+		 * @param I\DoubleEndedIterator<A> $second Second iterator to yields items from.
+		 * @return I\DoubleEndedIterator<A>
 		 */
-		return function ($second) use ($first) : self {
+		return function (I\DoubleEndedIterator $second) use ($first) : self {
 			return new self(
  			$first,
  			$second

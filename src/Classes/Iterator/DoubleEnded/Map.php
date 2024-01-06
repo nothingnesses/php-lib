@@ -11,41 +11,34 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Map implements I\DoubleEnded, I\Iterator {
+class Map implements I\DoubleEndedIterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @template B
-	 * @param I\DoubleEnded<B>&I\Iterator<B> $iterator Iterator to map the items of.
+	 * @param I\DoubleEndedIterator<B> $iterator Iterator to map the items of.
 	 * @param \Closure(B): A $fn Function applied to the items yielded.
 	 */
-	private function __construct(private I\DoubleEnded&I\Iterator $iterator, private \Closure $fn) {
+	private function __construct(private I\DoubleEndedIterator $iterator, private \Closure $fn) {
 	}
 
 	/**
 	 * @template B
 	 * @param callable(B): A $fn Function applied to the items yielded.
-	 * @return \Closure(I\DoubleEnded<B>&I\Iterator<B>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @return \Closure(I\DoubleEndedIterator<B>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new(callable $fn): \Closure {
 		/**
-		 * @param I\DoubleEnded<B>&I\Iterator<B> $iterator Iterator to map the items of.
-		 * @return I\DoubleEnded<A>&I\Iterator<A>
+		 * @param I\DoubleEndedIterator<B> $iterator Iterator to map the items of.
+		 * @return I\DoubleEndedIterator<A>
 		 */
-		return fn (I\DoubleEnded&I\Iterator $iterator): self => new self(
+		return fn (I\DoubleEndedIterator $iterator): self => new self(
 			fn: \Closure::fromCallable($fn),
 			iterator: $iterator
 		);

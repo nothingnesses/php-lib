@@ -11,10 +11,9 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * An iterator over a range.
- * @implements I\DoubleEnded<int>
- * @implements I\Iterator<int>
+ * @implements I\DoubleEndedIterator<int>
  */
-class Range implements I\DoubleEnded, I\Iterator {
+class Range implements I\DoubleEndedIterator {
 	/**
 	 * @var int
 	 */
@@ -31,13 +30,7 @@ class Range implements I\DoubleEnded, I\Iterator {
 	 * @use T\Iterator<int>
 	 * @use T\Iterator\DoubleEnded<int>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @var bool

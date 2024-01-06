@@ -41,14 +41,6 @@ interface DoubleEnded {
 	public function nth_back(int $index): C\Maybe;
 
 	/**
-	 * Returns an instance that yields items from the current instance in
-	 * reverse, up to the last item to be yielded before the reversal.
-	 *
-	 * @return I\DoubleEnded<A> An type that yields items in reverse.
-	 */
-	public function reverse(): I\DoubleEnded;
-
-	/**
 	 * Returns the first item from the back that satisfies a predicate function.
 	 *
 	 * @param callable(A): bool $fn Function applied to the items yielded to test if they match a condition.

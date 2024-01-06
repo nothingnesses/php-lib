@@ -13,36 +13,29 @@ use Nothingnesses\Lib\Traits as T;
  * An iterator over items of another iterator, in reverse.
  * 
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Reverse implements I\DoubleEnded, I\Iterator {
+class Reverse implements I\DoubleEndedIterator {
 	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
+	 * @var I\DoubleEndedIterator<A>
 	 */
 	private $iterator;
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator The iterator to yield items of in reverse.
+	 * @param I\DoubleEndedIterator<A> $iterator The iterator to yield items of in reverse.
 	 */
-	private function __construct(I\Iterator $iterator)
+	private function __construct(I\DoubleEndedIterator $iterator)
 	{
 		$this->iterator = $iterator;
 	}
 
 	/**
-	 * @param I\Iterator $iterator Iterator to return a reversed version of.
+	 * @param I\DoubleEndedIterator<A> $iterator Iterator to return a reversed version of.
 	 * @return C\Iterator\Reverse<A>
 	 */
 	public static function new($iterator): self {

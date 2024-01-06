@@ -11,43 +11,36 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Skip implements I\DoubleEnded, I\Iterator {
+class Skip implements I\DoubleEndedIterator {
 	/**
-	 * @var I\DoubleEnded<A>&I\Iterator<A>
+	 * @var I\DoubleEndedIterator<A>
 	 */
 	private $iterator;
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::map insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadOf T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
-	 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to skip the items of.
+	 * @param I\DoubleEndedIterator<A> $iterator Iterator to skip the items of.
 	 */
-	private function __construct($iterator)
+	private function __construct(I\DoubleEndedIterator $iterator)
 	{
 		$this->iterator = $iterator;
 	}
 
 	/**
 	 * @param int $n The number of items to skip.
-	 * @return \Closure(I\DoubleEnded<A>&I\Iterator<A>): (I\DoubleEnded<A>&I\Iterator<A>)
+	 * @return \Closure(I\DoubleEndedIterator<A>): (I\DoubleEndedIterator<A>)
 	 */
 	public static function new($n): \Closure {
 		/**
-		 * @param I\DoubleEnded<A>&I\Iterator<A> $iterator Iterator to skip the items of.
+		 * @param I\DoubleEndedIterator<A> $iterator Iterator to skip the items of.
 		 */
-		return function ($iterator) use ($n): self {
+		return function (I\DoubleEndedIterator $iterator) use ($n): self {
 			for ($a = 0; $a < $n; ++$a) {
 				$iterator->next();
 			}

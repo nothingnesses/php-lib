@@ -12,21 +12,14 @@ use Nothingnesses\Lib\Traits as T;
 
 /**
  * @template A
- * @implements I\DoubleEnded<A>
- * @implements I\Iterator<A>
+ * @implements I\DoubleEndedIterator<A>
  */
-class Once implements I\DoubleEnded, I\Iterator {
+class Once implements I\DoubleEndedIterator {
 	/**
 	 * @use T\Iterator<A>
 	 * @use T\Iterator\DoubleEnded<A>
 	 */
-	use T\Iterator, T\Iterator\DoubleEnded {
-		T\Iterator\DoubleEnded::chain insteadof T\Iterator;
-		T\Iterator\DoubleEnded::filter insteadof T\Iterator;
-		T\Iterator\DoubleEnded::map insteadof T\Iterator;
-		T\Iterator\DoubleEnded::skip insteadof T\Iterator;
-		T\Iterator\DoubleEnded::step_by insteadOf T\Iterator;
-	}
+	use T\Iterator, T\Iterator\DoubleEnded;
 
 	/**
 	 * @param bool $is_finished States if this iterator is finished.
@@ -37,9 +30,9 @@ class Once implements I\DoubleEnded, I\Iterator {
 
 	/**
 	 * @param A $item The item to output.
-	 * @return I\DoubleEnded<A>&I\Iterator<A>
+	 * @return I\DoubleEndedIterator<A>
 	 */
-	public static function new(mixed $item): I\DoubleEnded&I\Iterator {
+	public static function new(mixed $item): I\DoubleEndedIterator {
 		return new self(is_finished: false, item: $item);
 	}
 
